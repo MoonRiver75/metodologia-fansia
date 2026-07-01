@@ -88,8 +88,13 @@
     font-size: 13px;
   }
   .menu-bar .menu-item:active { background: var(--menu-hover); color: var(--selection-text); }
-  .menu-bar .zoom-btn { border: 1px solid transparent; }
-  .menu-bar .zoom-btn:hover { border-color: var(--text-dim); }
+  .menu-bar .zoom-wrap { position: relative; display: flex; align-items: center; margin-left: 2px; }
+  .menu-bar .zoom-wrap select {
+    font-family: inherit; font-size: 11px; height: 18px;
+    border: 1px solid var(--border); background: var(--window-bg);
+    color: var(--text); cursor: pointer; outline: none;
+    padding: 0 2px;
+  }
   .menu-bar .spacer { flex: 1; }
   .menu-bar .clock {
     font-size: 13px;
@@ -500,6 +505,50 @@
     color: var(--text);
   }
   .dfoot .btn:active { border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark); }
+  .mood-bar {
+    display: flex; flex-wrap: wrap; gap: 3px;
+    margin-bottom: 5px; padding: 4px; border: 2px solid var(--border);
+    background: var(--card-bg);
+  }
+  .mood-btn {
+    padding: 2px 6px; font-size: 11px; cursor: pointer;
+    border: 2px solid transparent; background: transparent;
+    font-family: inherit; color: var(--text-dim);
+  }
+  .mood-btn:hover { border-color: var(--text-dim); }
+  .mood-btn.sel { border-color: var(--accent-blue); color: var(--text); background: #DDDDFF; }
+  /* Old Twitter style diary entries */
+  .dlist { margin-top: 4px; }
+  .dentry-card {
+    border: 2px solid var(--border);
+    padding: 6px 8px; margin-bottom: 4px;
+    background: var(--bevel-light);
+    position: relative;
+  }
+  .dentry-card .dhead {
+    display: flex; align-items: center; gap: 5px;
+    margin-bottom: 3px; font-size: 11px; color: var(--text-dim);
+  }
+  .dentry-card .dhead .davatar {
+    width: 20px; height: 20px;
+    border: 1px solid var(--border); background: var(--window-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--accent-blue);
+  }
+  .dentry-card .dhead .duser { color: var(--accent-blue); }
+  .dentry-card .dtext { font-size: 12px; line-height: 1.4; color: var(--text); margin-bottom: 3px; word-break: break-word; }
+  .dentry-card .dfooter {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 10px; color: var(--text-dim);
+    border-top: 1px solid #D0D0D0; padding-top: 3px; margin-top: 3px;
+  }
+  .dentry-card .dmood { font-size: 11px; }
+  .dentry-card .ddel {
+    cursor: pointer; font-size: 11px; color: var(--accent-red);
+    border: none; background: none; font-family: inherit; padding: 0;
+  }
+  .dentry-card .ddel:hover { text-decoration: underline; }
+  .dentry-card .dtime { font-size: 10px; }
 
   /* ------ VIDEO ITEM ------ */
   .vitem { display: flex; gap: 5px; padding: 4px 0; border-bottom: 1px solid #D0D0D0; }
@@ -595,8 +644,14 @@
     <span class="menu-item"><span class="menu-item-text">Edit</span></span>
     <span class="menu-item"><span class="menu-item-text">View</span></span>
     <span class="menu-item"><span class="menu-item-text">Help</span></span>
-    <span class="menu-item zoom-btn" onclick="zoomOut()" title="Acercar" style="cursor:pointer;padding:2px 4px;font-size:13px;font-weight:700;">A+</span>
-    <span class="menu-item zoom-btn" onclick="zoomIn()" title="Alejar" style="cursor:pointer;padding:2px 4px;font-size:13px;font-weight:700;">A-</span>
+    <span class="zoom-wrap">&#128269; <select id="zoomSelect" onchange="applyZoom(this.value)">
+      <option value="0.75">75%</option>
+      <option value="0.85">85%</option>
+      <option value="1" selected>100%</option>
+      <option value="1.15">115%</option>
+      <option value="1.3">130%</option>
+      <option value="1.5">150%</option>
+    </select></span>
     <span class="spacer"></span>
     <span class="clock" id="clock">12:00</span>
   </div>
@@ -765,12 +820,24 @@
           <div class="da-content" id="da-diario">
             <div class="dacard">
               <h3>Que aprendi hoy</h3>
+              <div class="mood-bar" id="moodBar">
+                <span class="mood-btn" data-mood="feliz">&#128522; Feliz</span>
+                <span class="mood-btn" data-mood="contento">&#128578; Contento</span>
+                <span class="mood-btn" data-mood="neutral">&#128528; Neutral</span>
+                <span class="mood-btn" data-mood="triste">&#128546; Triste</span>
+                <span class="mood-btn" data-mood="enojado">&#128545; Enojado</span>
+                <span class="mood-btn" data-mood="cansado">&#128564; Cansado</span>
+                <span class="mood-btn" data-mood="motivado">&#128293; Motivado</span>
+              </div>
               <textarea class="dentry" id="diary" placeholder="Ej: 'Entendi como funcionan los embeddings. Use el prompt...'"></textarea>
               <div class="dfoot">
-                <button class="btn" onclick="saveDiary()">GUARDAR</button>
+                <button class="btn" onclick="saveDiary()">&#128172; PUBLICAR</button>
                 <span id="diaryStatus">-</span>
-                <button class="btn" onclick="clearDiary()">BORRAR</button>
               </div>
+            </div>
+            <div class="dacard">
+              <h3>&#128038; Timeline de Aprendizaje</h3>
+              <div class="dlist" id="diaryList"></div>
             </div>
             <div class="dacard">
               <h3>Preguntas de Validacion</h3>
@@ -1016,14 +1083,44 @@ function saveBurnoutChecks() { const d = []; document.querySelectorAll('#da-plan
 function resetChecks() { if (!confirm('Reiniciar todo el checklist?')) return; document.querySelectorAll('.chk:not(#da-planb .chk)').forEach(el => el.classList.remove('done')); localStorage.removeItem('fansia_checks'); updateAll(); }
 function resetBurnoutChecks() { if (!confirm('Reiniciar checklist anti-burnout?')) return; document.querySelectorAll('#da-planb .chk').forEach(el => el.classList.remove('done')); localStorage.setItem('fansia_burnout_checks', JSON.stringify([])); }
 
+const MOODS = { feliz:'&#128522;', contento:'&#128578;', neutral:'&#128528;', triste:'&#128546;', enojado:'&#128545;', cansado:'&#128564;', motivado:'&#128293;' };
+let currentMood = '';
+
 function saveDiary() {
-  const t = document.getElementById('diary').value;
-  localStorage.setItem('fansia_diary', t);
+  const t = document.getElementById('diary').value.trim();
+  if (!t) { alert('Escribe algo antes de publicar.'); return; }
+  if (!currentMood) { alert('Selecciona un estado de animo.'); return; }
+  const entries = JSON.parse(localStorage.getItem('fansia_diary_entries') || '[]');
+  entries.unshift({ id: Date.now(), text: t, mood: currentMood, date: new Date().toISOString() });
+  localStorage.setItem('fansia_diary_entries', JSON.stringify(entries));
+  document.getElementById('diary').value = '';
+  currentMood = '';
+  document.querySelectorAll('#moodBar .mood-btn').forEach(b => b.classList.remove('sel'));
+  renderDiaryList();
   const s = document.getElementById('diaryStatus');
   s.textContent = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
   setTimeout(() => { s.textContent = '-'; }, 3000);
 }
-function clearDiary() { if (!confirm('Borrar entrada?')) return; document.getElementById('diary').value = ''; localStorage.removeItem('fansia_diary'); document.getElementById('diaryStatus').textContent = 'Borrado'; }
+
+function deleteDiaryEntry(id) {
+  if (!confirm('Borrar este post?')) return;
+  let entries = JSON.parse(localStorage.getItem('fansia_diary_entries') || '[]');
+  entries = entries.filter(e => e.id !== id);
+  localStorage.setItem('fansia_diary_entries', JSON.stringify(entries));
+  renderDiaryList();
+}
+
+function renderDiaryList() {
+  const container = document.getElementById('diaryList');
+  const entries = JSON.parse(localStorage.getItem('fansia_diary_entries') || '[]');
+  if (!entries.length) { container.innerHTML = '<div style="font-size:12px;color:var(--text-dim);text-align:center;padding:10px 0;">Aun no has publicado nada. Aprende algo y escribelo!</div>'; return; }
+  container.innerHTML = entries.map(e => {
+    const d = new Date(e.date);
+    const timeStr = d.toLocaleDateString([],{day:'numeric',month:'short'}) + ' · ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const moodEmoji = MOODS[e.mood] || '';
+    return '<div class="dentry-card"><div class="dhead"><span class="davatar">F</span><span class="duser">fansia</span><span>@aprendiz</span><span style="flex:1"></span><span class="dtime">' + timeStr + '</span></div><div class="dtext">' + e.text + '</div><div class="dfooter"><span class="dmood">' + moodEmoji + ' ' + e.mood.charAt(0).toUpperCase() + e.mood.slice(1) + '</span><button class="ddel" onclick="deleteDiaryEntry(' + e.id + ')">Borrar</button></div></div>';
+  }).join('');
+}
 
 function buildCalendar() {
   const grid = document.getElementById('calgrid');
@@ -1073,19 +1170,6 @@ function closeWarning() { alert('System error: Cannot close. Learning in progres
 function zoomWarning() { alert('Zoom not available. Your progress is already maximized.'); }
 function trashClick() { alert('Empty Trash? Your completed tasks are already gone. Keep going!'); }
 
-const ZOOM_LEVELS = [0.75, 0.85, 1, 1.15, 1.3, 1.5];
-function zoomIn() {
-  let z = parseFloat(localStorage.getItem('fansia_zoom')) || 1;
-  let i = ZOOM_LEVELS.indexOf(z);
-  if (i < ZOOM_LEVELS.length - 1) z = ZOOM_LEVELS[i + 1];
-  applyZoom(z);
-}
-function zoomOut() {
-  let z = parseFloat(localStorage.getItem('fansia_zoom')) || 1;
-  let i = ZOOM_LEVELS.indexOf(z);
-  if (i > 0) z = ZOOM_LEVELS[i - 1];
-  applyZoom(z);
-}
 function applyZoom(z) {
   localStorage.setItem('fansia_zoom', z.toString());
   document.documentElement.style.setProperty('--zoom', z);
@@ -1093,8 +1177,18 @@ function applyZoom(z) {
 
 document.addEventListener('DOMContentLoaded', function() {
   init();
+  renderDiaryList();
+  document.querySelectorAll('#moodBar .mood-btn').forEach(b => {
+    b.addEventListener('click', function() {
+      document.querySelectorAll('#moodBar .mood-btn').forEach(x => x.classList.remove('sel'));
+      this.classList.add('sel');
+      currentMood = this.dataset.mood;
+    });
+  });
   const z = parseFloat(localStorage.getItem('fansia_zoom')) || 1;
-  if (z !== 1) applyZoom(z);
+  const sel = document.getElementById('zoomSelect');
+  if (sel) sel.value = z.toString();
+  if (z !== 1) document.documentElement.style.setProperty('--zoom', z);
 });
 
 if ('serviceWorker' in navigator) {
