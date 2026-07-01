@@ -7,103 +7,94 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fansia OS">
-<title>Fansia OS — Vintage Mac</title>
+<title>Fansia OS</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
   :root {
-    --desktop: #808080;
-    --menu-bg: #ffffff;
-    --menu-border: #000000;
-    --window-bg: #ffffff;
-    --window-title: repeating-linear-gradient(90deg, #000 0px, #000 2px, #fff 2px, #fff 4px);
-    --text: #000000;
-    --dim: #444444;
-    --highlight: #dddddd;
-    --shadow: #666666;
-    --pixel: 'Press Start 2P', monospace;
-    --sys: 'Courier New', 'Courier', monospace;
+    --blue: #007AFF;
+    --blue-dark: #0055CC;
+    --red: #FF3B30;
+    --orange: #FF9500;
+    --white: #FFFFFF;
+    --bg: #F2F2F7;
+    --card: #FFFFFF;
+    --text: #1D1D1F;
+    --text-dim: #86868B;
+    --border: #C7C7CC;
+    --shadow: rgba(0,0,0,0.08);
+    --pixel: 2px;
   }
 
-  /* ------ DESKTOP PATTERN ------ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
     margin: 0;
     min-height: 100vh;
-    background-color: var(--desktop);
+    background: var(--bg);
     background-image:
-      radial-gradient(circle, #999 1px, transparent 1px);
-    background-size: 8px 8px;
+      linear-gradient(45deg, #E8E8ED 1px, transparent 1px),
+      linear-gradient(-45deg, #E8E8ED 1px, transparent 1px);
+    background-size: 16px 16px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    font-family: var(--sys);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
     color: var(--text);
     overflow-x: hidden;
-    padding-top: 44px;
-    position: relative;
+    padding-top: 48px;
+    padding-bottom: 20px;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* ------ CURSOR (classic Mac pointer) ------ */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0;
-    width: 16px; height: 18px;
-    background: var(--text);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 85%, 20% 50%);
-    z-index: 999999;
-    pointer-events: none;
-    display: none;
-  }
-
-  /* ------ MENUBAR ------ */
+  /* ------ MENU BAR ------ */
   .menu-bar {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 44px;
-    background: var(--menu-bg);
-    border-bottom: 2px solid var(--menu-border);
+    height: 48px;
+    background: var(--blue);
     display: flex;
     align-items: center;
-    padding: 0 12px;
+    padding: 0 14px;
     z-index: 1000;
-    font-size: 13px;
-    font-family: var(--sys);
-    font-weight: 700;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.5);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    border-bottom: var(--pixel) solid var(--blue-dark);
   }
   .menu-bar .apple {
-    font-size: 18px;
-    margin-right: 16px;
-    padding: 8px 6px;
+    font-size: 20px;
+    margin-right: 14px;
+    padding: 4px 6px;
     cursor: default;
+    font-weight: 400;
   }
   .menu-bar .menu-item {
-    padding: 8px 10px;
+    padding: 6px 10px;
     cursor: default;
-    letter-spacing: -0.5px;
     user-select: none;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.9;
   }
-  .menu-bar .menu-item:active { background: var(--highlight); }
+  .menu-bar .menu-item:active { background: rgba(255,255,255,0.2); border-radius: 4px; }
   .menu-bar .spacer { flex: 1; }
   .menu-bar .clock {
-    font-size: 12px;
-    font-weight: 400;
-    padding: 8px 6px;
-    letter-spacing: 0.5px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 8px;
     cursor: default;
     user-select: none;
+    opacity: 0.9;
   }
 
   /* ------ MAIN WINDOW ------ */
   .window {
     width: 100%;
-    max-width: 440px;
-    margin: 8px 10px 20px;
-    background: var(--window-bg);
-    border: 2px solid var(--menu-border);
+    max-width: 460px;
+    margin: 6px 12px 20px;
+    background: var(--card);
+    border: var(--pixel) solid var(--border);
     border-radius: 0;
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 2px 12px var(--shadow);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -111,416 +102,439 @@
 
   /* ------ TITLE BAR ------ */
   .title-bar {
-    background: var(--window-title);
-    height: 20px;
-    border-bottom: 2px solid var(--menu-border);
+    background: var(--white);
+    height: 26px;
+    border-bottom: var(--pixel) solid var(--border);
     display: flex;
     align-items: center;
-    padding: 0 4px;
+    padding: 0 6px;
     position: relative;
     user-select: none;
   }
   .title-bar .close-box {
     width: 14px; height: 14px;
-    border: 2px solid var(--menu-border);
-    background: var(--window-bg);
-    margin-right: 6px;
+    border: var(--pixel) solid var(--red);
+    background: var(--red);
+    margin-right: 8px;
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
   }
-  .title-bar .close-box:active { background: var(--highlight); }
-  .title-bar .close-box::after { content: ''; }
+  .title-bar .close-box:active { opacity: 0.6; }
   .title-bar .title-text {
     flex: 1;
-    font-size: 11px;
-    font-weight: 700;
-    font-family: var(--sys);
+    font-size: 12px;
+    font-weight: 600;
     text-align: center;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    color: var(--text);
-    text-shadow: 0 0 0 var(--text);
+    color: var(--text-dim);
     overflow: hidden;
     white-space: nowrap;
   }
   .title-bar .zoom-box {
     width: 14px; height: 14px;
-    border: 2px solid var(--menu-border);
-    background: var(--window-bg);
+    border: var(--pixel) solid var(--orange);
+    background: var(--orange);
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
   }
-  .title-bar .zoom-box:active { background: var(--highlight); }
-  .title-bar .zoom-box::after { content: ''; display: block; width: 6px; height: 6px; background: var(--text); }
+  .title-bar .zoom-box:active { opacity: 0.6; }
 
-  /* ------ SCROLLBAR AREA ------ */
+  /* ------ WINDOW BODY ------ */
   .window-body {
-    padding: 10px 12px;
-    max-height: calc(100vh - 120px);
+    padding: 12px;
+    max-height: calc(100vh - 130px);
     overflow-y: auto;
     overflow-x: hidden;
     flex: 1;
   }
-  .window-body::-webkit-scrollbar { width: 14px; }
-  .window-body::-webkit-scrollbar-track {
-    background: var(--window-bg);
-    border-left: 2px solid var(--menu-border);
-  }
-  .window-body::-webkit-scrollbar-thumb {
-    background: var(--highlight);
-    border: 2px solid var(--menu-border);
-    border-right: none;
-  }
+  .window-body::-webkit-scrollbar { width: 8px; }
+  .window-body::-webkit-scrollbar-track { background: var(--bg); }
+  .window-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-  /* ------ WINDOW CONTENT DIVIDERS ------ */
-  .scrollable-content { min-height: 100px; }
-
-  /* ------ PROFILE BAR (inside window) ------ */
+  /* ------ PROFILE ------ */
   .profile-section {
-    border: 2px solid var(--menu-border);
-    padding: 8px 10px;
+    border: var(--pixel) solid var(--border);
+    padding: 10px 12px;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
-    background: var(--window-bg);
+    background: var(--card);
   }
   .profile-icon {
-    width: 40px; height: 40px;
-    border: 2px solid var(--menu-border);
+    width: 44px; height: 44px;
+    border: var(--pixel) solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
     cursor: pointer;
     flex-shrink: 0;
-    background: var(--window-bg);
+    background: var(--bg);
+    padding: 4px;
   }
-  .profile-icon:active { background: var(--highlight); }
+  .profile-icon:active { opacity: 0.7; }
   .profile-text { flex: 1; overflow: hidden; }
-  .profile-text .greet { font-size: 9px; font-family: var(--sys); color: var(--dim); }
+  .profile-text .greet { font-size: 11px; color: var(--text-dim); font-weight: 500; }
   .profile-text .pname {
-    font-size: 14px; font-weight: 700; font-family: var(--sys);
+    font-size: 16px; font-weight: 600;
     border: none; background: transparent; width: 100%; outline: none;
     color: var(--text); padding: 2px 0;
-    border-bottom: 2px dashed var(--dim);
+    border-bottom: var(--pixel) dashed var(--border);
+    font-family: inherit;
   }
   .icon-strip {
     display: none;
-    border: 2px solid var(--menu-border);
-    padding: 6px 10px;
+    border: var(--pixel) solid var(--border);
+    padding: 8px 10px;
     gap: 6px;
     justify-content: center;
     margin-bottom: 10px;
-    background: var(--window-bg);
+    background: var(--card);
   }
   .icon-strip.open { display: flex; }
   .icon-strip .iopt {
-    width: 32px; height: 32px;
-    border: 2px solid var(--menu-border);
+    width: 38px; height: 38px;
+    border: var(--pixel) solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
     cursor: pointer;
-    background: var(--window-bg);
+    background: var(--bg);
+    padding: 4px;
   }
-  .icon-strip .iopt:active { background: var(--highlight); }
-  .icon-strip .iopt.sel { background: var(--highlight); border-width: 3px; }
+  .icon-strip .iopt:active { opacity: 0.7; }
+  .icon-strip .iopt.sel { border-color: var(--blue); border-width: 3px; background: var(--white); }
 
-  /* ------ STATUS (desk accessory style) ------ */
+  /* ------ STATUS BAR ------ */
   .status-box {
-    border: 2px solid var(--menu-border);
-    padding: 8px 10px;
+    border: var(--pixel) solid var(--border);
+    padding: 10px 12px;
     margin-bottom: 10px;
-    background: var(--window-bg);
+    background: var(--card);
   }
   .status-row {
     display: flex;
     justify-content: space-between;
-    font-size: 9px;
-    font-family: var(--sys);
-    margin-top: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 4px;
+    color: var(--text-dim);
   }
-  .status-row .lbl { font-weight: 700; }
+  .status-row .lbl { color: var(--text); font-weight: 600; }
   .pbar {
-    height: 16px;
-    border: 2px solid var(--menu-border);
-    background: var(--window-bg);
+    height: 20px;
+    border: var(--pixel) solid var(--border);
+    background: var(--bg);
     position: relative;
     overflow: hidden;
-    margin-top: 4px;
+    margin-top: 6px;
   }
   .pbar .fill {
     height: 100%;
-    background: repeating-linear-gradient(90deg, #000 0px, #000 3px, #fff 3px, #fff 6px, #000 6px, #000 9px, #fff 9px, #fff 12px);
+    background: var(--blue);
     transition: width 0.5s;
     width: 0%;
   }
   .pbar .ov {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     display: flex; align-items: center; justify-content: center;
-    font-size: 7px; font-weight: 700; font-family: var(--sys);
+    font-size: 10px; font-weight: 700; color: var(--text);
   }
 
-  /* ------ DESK ACCESSORY TABS ------ */
-  .da-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 10px;
-  }
+  /* ------ TABS ------ */
+  .da-container { display: flex; flex-direction: column; gap: 0; margin-bottom: 10px; }
   .da-tabs {
     display: flex;
-    border-bottom: 2px solid var(--menu-border);
+    border-bottom: var(--pixel) solid var(--border);
     overflow-x: auto;
     scrollbar-width: none;
-    background: var(--window-bg);
+    background: var(--bg);
+    gap: 2px;
+    padding: 4px 4px 0;
   }
   .da-tabs::-webkit-scrollbar { display: none; }
   .da-btn {
     flex: 1 0 auto;
-    min-width: 64px;
-    padding: 6px 4px;
-    background: var(--window-bg);
+    min-width: 44px;
+    padding: 8px 6px 6px;
+    background: var(--bg);
     border: none;
-    border-top: 2px solid transparent;
-    border-left: 2px solid transparent;
-    border-right: 2px solid transparent;
-    font-size: 7px;
-    font-weight: 700;
-    font-family: var(--sys);
+    border-top: var(--pixel) solid transparent;
+    border-left: var(--pixel) solid transparent;
+    border-right: var(--pixel) solid transparent;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
-    color: var(--dim);
+    color: var(--text-dim);
     text-align: center;
-    transition: 0.1s;
     position: relative;
-    top: 2px;
+    transition: 0.15s;
+    letter-spacing: 0.3px;
   }
-  .da-btn .da-icon { font-size: 14px; display: block; margin-bottom: 1px; }
+  .da-btn .da-icon {
+    display: block;
+    margin: 0 auto 3px;
+    width: 18px; height: 18px;
+  }
   .da-btn.act {
-    border-color: var(--menu-border);
-    border-bottom-color: var(--window-bg);
-    color: var(--text);
-    background: var(--window-bg);
+    border-color: var(--blue);
+    border-bottom-color: var(--card);
+    color: var(--blue);
+    background: var(--card);
     z-index: 1;
+    font-weight: 700;
   }
+  .da-btn:active { opacity: 0.7; }
 
   .da-content { display: none; padding: 0; }
   .da-content.act { display: block; }
 
-  /* ------ CARDS (desk accessory content) ------ */
+  /* ------ CARDS ------ */
   .dacard {
-    border: 2px solid var(--menu-border);
-    padding: 8px 10px;
+    border: var(--pixel) solid var(--border);
+    padding: 10px 12px;
     margin-bottom: 8px;
-    background: var(--window-bg);
+    background: var(--card);
   }
   .dacard h3 {
-    font-size: 10px; font-weight: 700;
-    font-family: var(--sys); text-transform: uppercase;
-    letter-spacing: 1px; margin-bottom: 5px;
+    font-size: 14px; font-weight: 700; color: var(--text);
+    letter-spacing: -0.2px; margin-bottom: 6px;
   }
-  .dacard h4 { font-size: 9px; font-weight: 700; margin: 6px 0 3px; font-family: var(--sys); }
-  .dacard p, .dacard li { font-size: 8px; line-height: 1.5; font-family: var(--sys); color: var(--dim); }
-  .dacard ul { padding-left: 12px; }
-  .dacard li { margin-bottom: 2px; }
-  .dacard a { color: var(--text); }
+  .dacard h4 { font-size: 13px; font-weight: 600; color: var(--text); margin: 8px 0 4px; }
+  .dacard p, .dacard li { font-size: 13px; line-height: 1.5; color: var(--text-dim); }
+  .dacard ul { padding-left: 18px; }
+  .dacard li { margin-bottom: 3px; }
+  .dacard a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px dotted var(--blue);
+  }
+  .dacard a:active { color: var(--blue-dark); }
   .dacard .prompt-box {
-    background: var(--highlight);
-    border-left: 3px solid var(--menu-border);
-    padding: 6px 8px;
-    margin: 4px 0;
-    font-size: 8px;
+    background: #F5F5F8;
+    border-left: 3px solid var(--blue);
+    padding: 8px 10px;
+    margin: 6px 0;
+    font-size: 12px;
     font-style: italic;
-    font-family: var(--sys);
+    font-family: inherit;
     color: var(--text);
     word-break: break-word;
+    border-radius: 0;
   }
   .dacard .tag {
-    font-size: 6px; font-weight: 700;
-    border: 1px solid var(--menu-border);
-    padding: 0 4px;
-    margin-right: 2px;
+    font-size: 10px; font-weight: 600; color: var(--blue);
+    border: 1px solid var(--blue);
+    padding: 1px 6px;
+    margin-right: 3px;
   }
   .dacard .prio {
     display: inline-block;
-    font-size: 6px; font-weight: 700;
-    border: 1px solid var(--menu-border);
-    padding: 0 4px;
-    margin-left: 3px;
+    font-size: 10px; font-weight: 600;
+    border: 1px solid var(--orange);
+    color: var(--orange);
+    padding: 1px 6px;
+    margin-left: 4px;
   }
+  .dacard .prio-1 { border-color: var(--red); color: var(--red); }
+  .dacard .prio-2 { border-color: var(--orange); color: var(--orange); }
+  .dacard .prio-3 { border-color: var(--text-dim); color: var(--text-dim); }
 
   /* ------ WEEK GRID ------ */
-  .wgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+  .wgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
   .wcell {
-    border: 2px solid var(--menu-border);
-    padding: 6px;
+    border: var(--pixel) solid var(--border);
+    padding: 8px;
     cursor: pointer;
     transition: 0.1s;
     position: relative;
-    background: var(--window-bg);
+    background: var(--card);
   }
-  .wcell:active { background: var(--highlight); }
-  .wcell .wn { font-size: 7px; font-weight: 700; font-family: var(--sys); }
-  .wcell .wt { font-size: 6px; color: var(--dim); font-family: var(--sys); margin-top: 1px; }
+  .wcell:active { background: var(--bg); }
+  .wcell .wn { font-size: 11px; font-weight: 700; color: var(--text); }
+  .wcell .wt { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
   .wcell .wdot {
-    position: absolute; top: 4px; right: 4px;
-    width: 12px; height: 12px;
-    border: 2px solid var(--menu-border);
-    background: var(--window-bg);
+    position: absolute; top: 6px; right: 6px;
+    width: 16px; height: 16px;
+    border: var(--pixel) solid var(--border);
+    background: var(--card);
   }
-  .wcell .wdot.chk { background: var(--menu-border); }
-  .wcell .wdot.chk::after { content: 'X'; display: flex; align-items: center; justify-content: center; color: var(--window-bg); font-size: 7px; font-weight: 700; }
-  .wcell.done { opacity: 0.55; }
+  .wcell .wdot.chk { background: var(--blue); border-color: var(--blue); position: relative; }
+  .wcell .wdot.chk::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 7px; height: 4px;
+    border-left: 2px solid var(--white);
+    border-bottom: 2px solid var(--white);
+    transform: rotate(-45deg);
+  }
+  .wcell.done { opacity: 0.5; }
 
   /* ------ CHECKLIST ------ */
   .chk {
-    display: flex; align-items: center; gap: 6px;
-    padding: 4px 0;
-    border-bottom: 1px dashed var(--highlight);
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--bg);
     cursor: pointer;
   }
   .chk:last-child { border-bottom: none; }
   .chk .box {
-    width: 14px; height: 14px;
-    border: 2px solid var(--menu-border);
+    width: 18px; height: 18px;
+    border: var(--pixel) solid var(--border);
     flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 700;
-    background: var(--window-bg);
+    background: var(--card);
+    margin-top: 1px;
   }
-  .chk.done .box { background: var(--menu-border); }
-  .chk.done .box::after { content: 'X'; color: var(--window-bg); font-size: 8px; }
-  .chk .txt { font-size: 8px; font-family: var(--sys); line-height: 1.3; flex: 1; }
+  .chk.done .box { background: var(--blue); border-color: var(--blue); }
+  .chk.done .box::after {
+    content: '';
+    width: 8px; height: 5px;
+    border-left: 2px solid var(--white);
+    border-bottom: 2px solid var(--white);
+    transform: rotate(-45deg);
+    position: absolute;
+  }
+  .chk .box { position: relative; }
+  .chk .txt { font-size: 13px; line-height: 1.4; flex: 1; color: var(--text); }
   .chk.done .txt { text-decoration: line-through; opacity: 0.4; }
-  .chk .ctag { font-size: 6px; border: 1px solid var(--menu-border); padding: 0 4px; white-space: nowrap; }
+  .chk .ctag {
+    font-size: 9px; font-weight: 600;
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    white-space: nowrap;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
 
   /* ------ CALENDAR ------ */
-  .calgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-  .calh { text-align: center; font-size: 6px; font-weight: 700; font-family: var(--sys); padding: 2px 0; border-bottom: 2px solid var(--menu-border); }
+  .calgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .calh { text-align: center; font-size: 10px; font-weight: 600; color: var(--text-dim); padding: 4px 0; border-bottom: var(--pixel) solid var(--border); }
   .cald {
     aspect-ratio: 1;
     display: flex; align-items: center; justify-content: center;
-    font-size: 6px; font-family: var(--sys);
-    border: 1px solid var(--highlight);
-    background: var(--window-bg);
+    font-size: 11px; font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
   }
-  .cald.pst { background: var(--highlight); opacity: 0.4; }
-  .cald.tdy { border: 3px solid var(--menu-border); font-weight: 700; }
-  .cald.rem { border-color: var(--menu-border); }
+  .cald.pst { background: var(--blue); color: var(--white); border-color: var(--blue); font-weight: 600; }
+  .cald.tdy { border: 3px solid var(--red); font-weight: 700; }
+  .cald.rem { border-color: var(--border); }
   .cald.emp { border: none; background: transparent; }
-  .calinfo { display: flex; justify-content: space-between; margin-top: 4px; font-size: 7px; font-family: var(--sys); }
+  .calinfo { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--text-dim); }
 
   /* ------ DIARY ------ */
   .dentry {
-    border: 2px solid var(--menu-border);
-    background: var(--window-bg);
-    padding: 6px;
-    min-height: 44px;
-    font-size: 8px;
-    font-family: var(--sys);
+    border: var(--pixel) solid var(--border);
+    background: var(--card);
+    padding: 8px 10px;
+    min-height: 60px;
+    font-size: 13px;
+    font-family: inherit;
     resize: vertical;
     width: 100%;
     outline: none;
     color: var(--text);
-    line-height: 1.4;
+    line-height: 1.5;
   }
-  .dentry:focus { background: #f8f8f8; }
-  .dfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 7px; font-family: var(--sys); }
+  .dentry:focus { background: var(--white); border-color: var(--blue); }
+  .dfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 12px; color: var(--text-dim); }
   .dfoot .btn {
-    border: 2px solid var(--menu-border);
-    background: var(--window-bg);
-    padding: 3px 8px;
-    font-size: 7px;
-    font-family: var(--sys);
-    font-weight: 700;
+    border: var(--pixel) solid var(--border);
+    background: var(--card);
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: inherit;
+    font-weight: 600;
     cursor: pointer;
     color: var(--text);
   }
-  .dfoot .btn:active { background: var(--highlight); }
+  .dfoot .btn:active { background: var(--bg); }
 
   /* ------ VIDEO ITEM ------ */
-  .vitem { display: flex; gap: 6px; padding: 5px 0; border-bottom: 1px dashed var(--highlight); }
+  .vitem { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--bg); }
   .vitem:last-child { border-bottom: none; }
-  .vthumb { width: 30px; height: 30px; border: 2px solid var(--menu-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; background: var(--window-bg); }
+  .vthumb {
+    width: 36px; height: 36px; border: var(--pixel) solid var(--border);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: var(--bg); font-weight: 700; font-size: 11px; color: var(--text-dim);
+  }
   .vinfo { flex: 1; }
-  .vinfo .vt { font-size: 8px; font-weight: 700; font-family: var(--sys); }
-  .vinfo .vm { font-size: 6px; color: var(--dim); font-family: var(--sys); margin-top: 1px; }
-  .vinfo .vd { font-size: 7px; color: var(--dim); font-family: var(--sys); margin-top: 1px; }
+  .vinfo .vt { font-size: 13px; font-weight: 600; color: var(--text); }
+  .vinfo .vt a { color: var(--text); border: none; }
+  .vinfo .vt a:active { color: var(--blue); }
+  .vinfo .vm { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .vinfo .vd { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
 
-  .stitle { font-size: 9px; font-weight: 700; font-family: var(--sys); margin: 8px 0 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .stitle { font-size: 13px; font-weight: 700; color: var(--text); margin: 10px 0 6px; letter-spacing: -0.2px; }
 
-  /* ------ BOTTOM BAR (trash area) ------ */
+  /* ------ BOTTOM TRASH ------ */
   .desktop-bottom {
     position: fixed;
-    bottom: 8px;
-    right: 12px;
+    bottom: 10px;
+    right: 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 3px;
     z-index: 500;
-    opacity: 0.6;
+    opacity: 0.5;
   }
   .desktop-bottom .trash-icon {
-    width: 28px; height: 32px;
-    border: 2px solid var(--menu-border);
-    background: var(--window-bg);
+    width: 28px; height: 30px;
+    border: var(--pixel) solid var(--border);
+    background: var(--card);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
     cursor: pointer;
+    padding: 3px;
   }
-  .desktop-bottom .trash-icon:active { background: var(--highlight); }
+  .desktop-bottom .trash-icon:active { opacity: 0.6; }
+  .desktop-bottom .trash-icon svg { width: 18px; height: 20px; }
   .desktop-bottom .trash-label {
-    font-size: 6px;
-    font-family: var(--sys);
-    color: var(--window-bg);
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--text-dim);
   }
 
   /* ------ RESET BUTTON ------ */
-  .reset-area {
-    display: flex; gap: 6px; margin-top: 6px;
-  }
+  .reset-area { display: flex; gap: 8px; margin-top: 8px; }
   .reset-area .btn {
     flex: 1; text-align: center;
-    border: 2px solid var(--menu-border);
-    background: var(--window-bg);
-    padding: 5px;
-    font-size: 7px;
-    font-family: var(--sys);
-    font-weight: 700;
+    border: var(--pixel) solid var(--red);
+    background: var(--card);
+    padding: 8px;
+    font-size: 12px;
+    font-family: inherit;
+    font-weight: 600;
     cursor: pointer;
-    color: var(--text);
+    color: var(--red);
   }
-  .reset-area .btn:active { background: var(--highlight); }
+  .reset-area .btn:active { background: #FFF5F5; }
 
-  /* ------ BOOT CHIME LINE ------ */
+  /* ------ BOOT LINE ------ */
   .boot-line {
-    font-size: 6px;
-    font-family: var(--sys);
-    color: var(--dim);
+    font-size: 10px;
+    color: var(--text-dim);
     text-align: center;
-    padding: 4px 0;
-    border-top: 1px dashed var(--highlight);
-    margin-top: 4px;
+    padding: 6px 0 2px;
+    border-top: 1px solid var(--bg);
+    margin-top: 6px;
   }
-  .boot-line span { font-weight: 700; color: var(--text); }
+  .boot-line span { font-weight: 600; color: var(--blue); }
 
   /* ------ RESPONSIVE ------ */
   @media (max-width: 440px) {
     .window { margin: 4px 6px 20px; }
-    .menu-bar { font-size: 11px; }
-    .menu-bar .menu-item { padding: 8px 5px; }
+    .menu-bar { font-size: 12px; }
+    .menu-bar .menu-item { padding: 6px 5px; font-size: 11px; }
+    .da-btn { min-width: 38px; font-size: 9px; padding: 6px 4px 5px; }
   }
   @media (max-width: 360px) {
     .menu-item-text { display: none; }
@@ -529,18 +543,18 @@
 </head>
 <body>
 
-  <!-- ===== MENUBAR ===== -->
+  <!-- MENU BAR -->
   <div class="menu-bar">
-    <span class="apple"></span>
+    <span class="apple">F</span>
     <span class="menu-item"><span class="menu-item-text">File</span></span>
     <span class="menu-item"><span class="menu-item-text">Edit</span></span>
     <span class="menu-item"><span class="menu-item-text">View</span></span>
-    <span class="menu-item"><span class="menu-item-text">Special</span></span>
+    <span class="menu-item"><span class="menu-item-text">Help</span></span>
     <span class="spacer"></span>
     <span class="clock" id="clock">12:00</span>
   </div>
 
-  <!-- ===== MAIN WINDOW ===== -->
+  <!-- MAIN WINDOW -->
   <div class="window">
 
     <!-- TITLE BAR -->
@@ -556,251 +570,311 @@
 
         <!-- PROFILE -->
         <div class="profile-section">
-          <div class="profile-icon" id="picon" onclick="toggleIcons()">★</div>
+          <div class="profile-icon" id="picon" onclick="toggleIcons()">
+            <svg viewBox="0 0 20 20" width="20" height="20" id="piconSvg">
+              <rect x="8" y="2" width="4" height="4" fill="#007AFF"/>
+              <rect x="6" y="6" width="8" height="4" fill="#007AFF"/>
+              <rect x="4" y="10" width="4" height="2" fill="#007AFF"/>
+              <rect x="12" y="10" width="4" height="2" fill="#007AFF"/>
+              <rect x="6" y="12" width="8" height="2" fill="#007AFF"/>
+              <rect x="8" y="14" width="4" height="2" fill="#007AFF"/>
+            </svg>
+          </div>
           <div class="profile-text">
-            <div class="greet" id="greeting">Bienvenido, viajer@</div>
+            <div class="greet" id="greeting">Bienvenido</div>
             <input class="pname" id="pname" placeholder="tu nombre..." maxlength="20">
           </div>
         </div>
 
-        <!-- ICON STRIP -->
+        <!-- ICON STRIP (pixel art SVGs) -->
         <div class="icon-strip" id="iconStrip">
-          <div class="iopt sel" data-i="★">★</div>
-          <div class="iopt" data-i="☽">☽</div>
-          <div class="iopt" data-i="♠">♠</div>
-          <div class="iopt" data-i="♣">♣</div>
-          <div class="iopt" data-i="♦">♦</div>
+          <div class="iopt sel" data-i="star">
+            <svg viewBox="0 0 20 20" width="20" height="20"><rect x="8" y="2" width="4" height="4" fill="#007AFF"/><rect x="6" y="6" width="8" height="4" fill="#007AFF"/><rect x="4" y="10" width="4" height="2" fill="#007AFF"/><rect x="12" y="10" width="4" height="2" fill="#007AFF"/><rect x="6" y="12" width="8" height="2" fill="#007AFF"/><rect x="8" y="14" width="4" height="2" fill="#007AFF"/></svg>
+          </div>
+          <div class="iopt" data-i="moon">
+            <svg viewBox="0 0 20 20" width="20" height="20"><rect x="14" y="2" width="4" height="4" fill="#007AFF"/><rect x="12" y="6" width="6" height="4" fill="#007AFF"/><rect x="10" y="10" width="8" height="4" fill="#007AFF"/><rect x="4" y="10" width="4" height="2" fill="#007AFF"/><rect x="10" y="14" width="6" height="4" fill="#007AFF"/></svg>
+          </div>
+          <div class="iopt" data-i="heart">
+            <svg viewBox="0 0 20 20" width="20" height="20"><rect x="2" y="4" width="4" height="4" fill="#FF3B30"/><rect x="14" y="4" width="4" height="4" fill="#FF3B30"/><rect x="4" y="2" width="4" height="4" fill="#FF3B30"/><rect x="12" y="2" width="4" height="4" fill="#FF3B30"/><rect x="6" y="6" width="8" height="4" fill="#FF3B30"/><rect x="4" y="10" width="12" height="4" fill="#FF3B30"/><rect x="6" y="14" width="8" height="2" fill="#FF3B30"/><rect x="8" y="16" width="4" height="2" fill="#FF3B30"/></svg>
+          </div>
+          <div class="iopt" data-i="diamond">
+            <svg viewBox="0 0 20 20" width="20" height="20"><rect x="8" y="0" width="4" height="4" fill="#FF9500"/><rect x="6" y="4" width="8" height="4" fill="#FF9500"/><rect x="4" y="8" width="12" height="4" fill="#FF9500"/><rect x="6" y="12" width="8" height="4" fill="#FF9500"/><rect x="8" y="16" width="4" height="4" fill="#FF9500"/></svg>
+          </div>
+          <div class="iopt" data-i="person">
+            <svg viewBox="0 0 20 20" width="20" height="20"><rect x="6" y="2" width="8" height="6" fill="#007AFF"/><rect x="4" y="8" width="12" height="6" fill="#007AFF"/><rect x="2" y="14" width="16" height="6" fill="#007AFF"/></svg>
+          </div>
         </div>
 
         <!-- STATUS -->
         <div class="status-box">
           <div class="status-row"><span class="lbl">Progreso General</span><span id="pctText">0%</span></div>
-          <div class="pbar"><div class="fill" id="pfill"></div><div class="ov" id="pov">Día 0 de 60</div></div>
-          <div class="status-row"><span id="weekLabel">Semana 0 · Preparación</span><span id="dayLabel">◆ 0 días</span></div>
+          <div class="pbar"><div class="fill" id="pfill"></div><div class="ov" id="pov">Dia 0 de 60</div></div>
+          <div class="status-row"><span id="weekLabel">Semana 0 - Preparacion</span><span id="dayLabel">0 dias</span></div>
         </div>
 
-        <!-- DESK ACCESSORY TABS -->
+        <!-- TABS -->
         <div class="da-container">
 
           <div class="da-tabs">
-            <button class="da-btn act" data-da="ruta"><span class="da-icon">◊</span>RUTA</button>
-            <button class="da-btn" data-da="check"><span class="da-icon">✓</span>CHECK</button>
-            <button class="da-btn" data-da="cal"><span class="da-icon">◈</span>CAL</button>
-            <button class="da-btn" data-da="diario"><span class="da-icon">□</span>DIARIO</button>
-            <button class="da-btn" data-da="videos"><span class="da-icon">▶</span>VIDEOS</button>
-            <button class="da-btn" data-da="recursos"><span class="da-icon">■</span>REC</button>
-            <button class="da-btn" data-da="prompts"><span class="da-icon">⚡</span>PROM</button>
-            <button class="da-btn" data-da="planb"><span class="da-icon">▲</span>PLAN B</button>
+            <button class="da-btn act" data-da="ruta">
+              <svg class="da-icon" viewBox="0 0 18 18"><rect x="2" y="2" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"/><rect x="6" y="6" width="6" height="6" fill="currentColor"/></svg>
+              RUTA
+            </button>
+            <button class="da-btn" data-da="check">
+              <svg class="da-icon" viewBox="0 0 18 18"><rect x="2" y="2" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="5,10 8,13 13,6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+              CHECK
+            </button>
+            <button class="da-btn" data-da="cal">
+              <svg class="da-icon" viewBox="0 0 18 18"><rect x="2" y="4" width="14" height="12" fill="none" stroke="currentColor" stroke-width="2"/><line x1="2" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="2"/><rect x="5" y="1" width="2" height="4" fill="currentColor"/><rect x="11" y="1" width="2" height="4" fill="currentColor"/></svg>
+              CAL
+            </button>
+            <button class="da-btn" data-da="diario">
+              <svg class="da-icon" viewBox="0 0 18 18"><rect x="3" y="1" width="12" height="16" fill="none" stroke="currentColor" stroke-width="2"/><line x1="6" y1="6" x2="12" y2="6" stroke="currentColor" stroke-width="2"/><line x1="6" y1="9" x2="12" y2="9" stroke="currentColor" stroke-width="2"/><line x1="6" y1="12" x2="10" y2="12" stroke="currentColor" stroke-width="2"/></svg>
+              DIARIO
+            </button>
+            <button class="da-btn" data-da="videos">
+              <svg class="da-icon" viewBox="0 0 18 18"><polygon points="3,2 15,9 3,16" fill="currentColor"/></svg>
+              VIDEOS
+            </button>
+            <button class="da-btn" data-da="recursos">
+              <svg class="da-icon" viewBox="0 0 18 18"><rect x="2" y="3" width="14" height="12" fill="none" stroke="currentColor" stroke-width="2"/><line x1="2" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="2"/><rect x="4" y="9" width="4" height="3" fill="currentColor"/></svg>
+              REC
+            </button>
+            <button class="da-btn" data-da="prompts">
+              <svg class="da-icon" viewBox="0 0 18 18"><polygon points="10,1 3,11 9,11 8,17 15,7 9,7" fill="currentColor"/></svg>
+              PROM
+            </button>
+            <button class="da-btn" data-da="planb">
+              <svg class="da-icon" viewBox="0 0 18 18"><polygon points="9,2 16,15 2,15" fill="none" stroke="currentColor" stroke-width="2"/><line x1="9" y1="7" x2="9" y2="11" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="13" r="1" fill="currentColor"/></svg>
+              PLAN B
+            </button>
           </div>
 
-          <!-- ===== DA: RUTA ===== -->
+          <!-- DA: RUTA -->
           <div class="da-content act" id="da-ruta">
             <div class="dacard">
-              <h3>◊ Roadmap 8 Semanas</h3>
-              <p style="margin-bottom:4px">Toca cada semana para marcar/ver detalles.</p>
+              <h3>Roadmap 8 Semanas</h3>
+              <p style="margin-bottom:6px">Toca cada semana para marcar/ver detalles.</p>
               <div class="wgrid" id="wgrid">
-                <div class="wcell" data-w="0"><div class="wn">SEM 0</div><div class="wt">Preparación</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="0"><div class="wn">SEM 0</div><div class="wt">Preparacion</div><div class="wdot"></div></div>
                 <div class="wcell" data-w="1"><div class="wn">SEM 1</div><div class="wt">Python + Auto</div><div class="wdot"></div></div>
                 <div class="wcell" data-w="2"><div class="wn">SEM 2</div><div class="wt">Pandas + APIs</div><div class="wdot"></div></div>
                 <div class="wcell" data-w="3"><div class="wn">SEM 3</div><div class="wt">Embeddings</div><div class="wdot"></div></div>
-                <div class="wcell" data-w="4"><div class="wn">SEM 4</div><div class="wt">ML + Random Forest</div><div class="wdot"></div></div>
-                <div class="wcell" data-w="5"><div class="wn">SEM 5</div><div class="wt">LLMs + Prompts</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="4"><div class="wn">SEM 4</div><div class="wt">ML + RF</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="5"><div class="wn">SEM 5</div><div class="wt">LLMs + Prompt</div><div class="wdot"></div></div>
                 <div class="wcell" data-w="6"><div class="wn">SEM 6</div><div class="wt">RAG + Chatbots</div><div class="wdot"></div></div>
                 <div class="wcell" data-w="7"><div class="wn">SEM 7</div><div class="wt">Agentes</div><div class="wdot"></div></div>
-                <div class="wcell" data-w="8" style="grid-column:span 2"><div class="wn">SEM 8 · PROYECTO FINAL</div><div class="wt">EduAssist: 3 agentes en 1</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="8" style="grid-column:span 2"><div class="wn">SEM 8 - PROYECTO FINAL</div><div class="wt">EduAssist: 3 agentes en 1</div><div class="wdot"></div></div>
               </div>
             </div>
             <div class="dacard" id="detailCard">
-              <h3 id="dtitle">Semana 0 — Preparación</h3>
-              <div id="dbody"><h4>Objetivo</h4><p>Entorno listo. Sin escribir código.</p><h4>Instalar</h4><ul><li>Python 3.12</li><li>VS Code + extensiones</li><li>Git + GitHub Desktop</li><li>Docker Desktop</li><li>Postman</li></ul><h4>Cuentas</h4><ul><li>GitHub · ChatGPT · OpenAI API</li></ul></div>
+              <h3 id="dtitle">Semana 0 - Preparacion</h3>
+              <div id="dbody"><h4>Objetivo</h4><p>Entorno listo. Sin escribir codigo.</p><h4>Instalar</h4><ul><li>Python 3.12</li><li>VS Code + extensiones</li><li>Git + GitHub Desktop</li><li>Docker Desktop</li><li>Postman</li></ul><h4>Cuentas</h4><ul><li>GitHub - ChatGPT - OpenAI API</li></ul></div>
             </div>
           </div>
 
-          <!-- ===== DA: CHECK ===== -->
+          <!-- DA: CHECK -->
           <div class="da-content" id="da-check">
             <div class="dacard">
-              <h3>✓ Checklist Diario <span style="font-weight:400;font-size:7px" id="chkCount">(0/6)</span></h3>
+              <h3>Checklist Diario <span style="font-weight:400;font-size:12px;color:var(--text-dim)" id="chkCount">(0/6)</span></h3>
               <div id="chkList">
-                <div class="chk" data-c="c1"><div class="box"></div><div class="txt"><b>[25m] B1:</b> Ver/Aprender — tutorial o docs. Sin código.</div><span class="ctag">DÍA</span></div>
-                <div class="chk" data-c="c2"><div class="box"></div><div class="txt"><b>[25m] B2:</b> Escribir código en VS Code. Copilot si te atoras.</div><span class="ctag">DÍA</span></div>
-                <div class="chk" data-c="c3"><div class="box"></div><div class="txt"><b>[25m] B3:</b> Depurar y modificar. Rompe el código a propósito.</div><span class="ctag">DÍA</span></div>
-                <div class="chk" data-c="c4"><div class="box"></div><div class="txt"><b>[25m] B4:</b> Documentar y commit. README + git push.</div><span class="ctag">DÍA</span></div>
-                <div class="chk" data-c="c5"><div class="box"></div><div class="txt"><b>Fin de día:</b> ¿Corre? ¿Entiendo cada línea? ¿Commit?</div><span class="ctag">NOCHE</span></div>
-                <div class="chk" data-c="c6"><div class="box"></div><div class="txt"><b>Reflexión:</b> ¿Qué aprendí? ¿Qué prompt funcionó mejor?</div><span class="ctag">NOCHE</span></div>
+                <div class="chk" data-c="c1"><div class="box"></div><div class="txt"><b>[25m] B1:</b> Ver/Aprender - tutorial o docs. Sin codigo.</div><span class="ctag">DIA</span></div>
+                <div class="chk" data-c="c2"><div class="box"></div><div class="txt"><b>[25m] B2:</b> Escribir codigo en VS Code. Copilot si te atoras.</div><span class="ctag">DIA</span></div>
+                <div class="chk" data-c="c3"><div class="box"></div><div class="txt"><b>[25m] B3:</b> Depurar y modificar. Rompe el codigo a proposito.</div><span class="ctag">DIA</span></div>
+                <div class="chk" data-c="c4"><div class="box"></div><div class="txt"><b>[25m] B4:</b> Documentar y commit. README + git push.</div><span class="ctag">DIA</span></div>
+                <div class="chk" data-c="c5"><div class="box"></div><div class="txt"><b>Fin de dia:</b> Corre? Entiendo cada linea? Commit?</div><span class="ctag">NOCHE</span></div>
+                <div class="chk" data-c="c6"><div class="box"></div><div class="txt"><b>Reflexion:</b> Que aprendi? Que prompt funciono mejor?</div><span class="ctag">NOCHE</span></div>
               </div>
             </div>
             <div class="dacard">
-              <h3>✓ Checklist Semanal</h3>
+              <h3>Checklist Semanal</h3>
               <div>
-                <div class="chk" data-c="w1"><div class="box"></div><div class="txt">Terminé el proyecto de la semana?</div><span class="ctag">DOM</span></div>
-                <div class="chk" data-c="w2"><div class="box"></div><div class="txt">Subí a GitHub con README?</div><span class="ctag">DOM</span></div>
-                <div class="chk" data-c="w3"><div class="box"></div><div class="txt">Escribí qué prompts funcionaron mejor?</div><span class="ctag">DOM</span></div>
-                <div class="chk" data-c="w4"><div class="box"></div><div class="txt">Grabé video demo de 30s-2 min?</div><span class="ctag">DOM</span></div>
-                <div class="chk" data-c="w5"><div class="box"></div><div class="txt">Descansé el domingo? (no estudiar)</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w1"><div class="box"></div><div class="txt">Termine el proyecto de la semana?</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w2"><div class="box"></div><div class="txt">Subi a GitHub con README?</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w3"><div class="box"></div><div class="txt">Escribi que prompts funcionaron mejor?</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w4"><div class="box"></div><div class="txt">Grabe video demo de 30s-2 min?</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w5"><div class="box"></div><div class="txt">Descanse el domingo? (no estudiar)</div><span class="ctag">DOM</span></div>
               </div>
             </div>
             <div class="reset-area"><button class="btn" onclick="resetChecks()">REINICIAR CHECKLIST</button></div>
           </div>
 
-          <!-- ===== DA: CAL ===== -->
+          <!-- DA: CAL -->
           <div class="da-content" id="da-cal">
             <div class="dacard">
-              <h3>◈ Calendario de Progreso</h3>
-              <p style="margin-bottom:4px"><span id="calStatus">60 días restantes</span></p>
+              <h3>Calendario de Progreso</h3>
+              <p style="margin-bottom:6px"><span id="calStatus">60 dias restantes</span></p>
               <div class="calgrid" id="calgrid"></div>
-              <div class="calinfo"><span>■ Completado</span><span>□ Pendiente</span><span id="calCount">0 / 60</span></div>
+              <div class="calinfo"><span>Completado</span><span>Pendiente</span><span id="calCount">0 / 60</span></div>
             </div>
             <div class="dacard">
-              <h3>◈ Estadísticas</h3>
-              <p>Días transcurridos: <span id="statDays">0</span> · Restantes: <span id="statLeft">60</span></p>
-              <p>Semana actual: <span id="statWeek">0</span> · Checklist: <span id="statCheck">0/6</span> · Proyectos: <span id="statProj">0/4</span></p>
+              <h3>Estadisticas</h3>
+              <p>Dias transcurridos: <span id="statDays">0</span> - Restantes: <span id="statLeft">60</span></p>
+              <p>Semana actual: <span id="statWeek">0</span> - Checklist: <span id="statCheck">0/6</span> - Proyectos: <span id="statProj">0/4</span></p>
             </div>
           </div>
 
-          <!-- ===== DA: DIARIO ===== -->
+          <!-- DA: DIARIO -->
           <div class="da-content" id="da-diario">
             <div class="dacard">
-              <h3>□ Qué aprendí hoy</h3>
-              <textarea class="dentry" id="diary" placeholder="Ej: 'Entendí cómo funcionan los embeddings. Usé el prompt...'"></textarea>
+              <h3>Que aprendi hoy</h3>
+              <textarea class="dentry" id="diary" placeholder="Ej: 'Entendi como funcionan los embeddings. Use el prompt...'"></textarea>
               <div class="dfoot">
                 <button class="btn" onclick="saveDiary()">GUARDAR</button>
-                <span id="diaryStatus">—</span>
+                <span id="diaryStatus">-</span>
                 <button class="btn" onclick="clearDiary()">BORRAR</button>
               </div>
             </div>
             <div class="dacard">
-              <h3>□ Preguntas de Validación</h3>
-              <div class="chk" data-c="v1"><div class="box"></div><div class="txt">Si cambio <code>=</code> por <code>==</code>, ¿qué pasa?</div></div>
-              <div class="chk" data-c="v2"><div class="box"></div><div class="txt">¿Qué hace <code>with open(...)</code> vs <code>open()</code>?</div></div>
-              <div class="chk" data-c="v3"><div class="box"></div><div class="txt">¿Puedo explicar el código sin que la IA lo haga?</div></div>
-              <div class="chk" data-c="v4"><div class="box"></div><div class="txt">¿Qué pasa si cambio el modelo de embeddings?</div></div>
-              <div class="chk" data-c="v5"><div class="box"></div><div class="txt">¿Qué aprendí del error de hoy? (registrar en diario)</div></div>
+              <h3>Preguntas de Validacion</h3>
+              <div class="chk" data-c="v1"><div class="box"></div><div class="txt">Si cambio <code>=</code> por <code>==</code>, que pasa?</div></div>
+              <div class="chk" data-c="v2"><div class="box"></div><div class="txt">Que hace <code>with open(...)</code> vs <code>open()</code>?</div></div>
+              <div class="chk" data-c="v3"><div class="box"></div><div class="txt">Puedo explicar el codigo sin que la IA lo haga?</div></div>
+              <div class="chk" data-c="v4"><div class="box"></div><div class="txt">Que pasa si cambio el modelo de embeddings?</div></div>
+              <div class="chk" data-c="v5"><div class="box"></div><div class="txt">Que aprendi del error de hoy? (registrar en diario)</div></div>
             </div>
           </div>
 
-          <!-- ===== DA: VIDEOS ===== -->
+          <!-- DA: VIDEOS -->
           <div class="da-content" id="da-videos">
             <div class="dacard">
-              <h3>▶ Biblioteca de Videos</h3>
-              <p>Prioridad: <span class="prio">#1</span> Imperdible · <span class="prio">#2</span> Recomendado · <span class="prio">#3</span> Si tienes tiempo</p>
+              <h3>Biblioteca de Videos</h3>
+              <p>Prioridad: <span class="prio prio-1">#1</span> Imperdible - <span class="prio prio-2">#2</span> Recomendado - <span class="prio prio-3">#3</span> Si tienes tiempo</p>
             </div>
             <div class="stitle">Sem 1-2: Python</div>
             <div class="dacard">
-              <div class="vitem"><div class="vthumb">H</div><div class="vinfo"><div class="vt">Harvard CS50 Python <span class="prio">#1</span></div><div class="vm">David Malan · 10h gratis</div><div class="vd">El mejor curso de Python. Funciones, loops, file I/O.</div></div></div>
-              <div class="vitem"><div class="vthumb">C</div><div class="vinfo"><div class="vt">Corey Schafer <span class="prio">#1</span></div><div class="vm">9h gratis YouTube</div><div class="vd">Explica lento y claro. Fundamentos sólidos.</div></div></div>
-              <div class="vitem"><div class="vthumb">F</div><div class="vinfo"><div class="vt">freeCodeCamp Python <span class="prio">#2</span></div><div class="vm">4h gratis</div><div class="vd">Curso acelerado. Directo al grano.</div></div></div>
+              <div class="vitem"><div class="vthumb">H</div><div class="vinfo"><div class="vt"><a href="https://cs50.harvard.edu/python/" target="_blank" rel="noopener">Harvard CS50 Python <span class="prio prio-1">#1</span></a></div><div class="vm">David Malan - 10h gratis</div><div class="vd">El mejor curso de Python. Funciones, loops, file I/O.</div></div></div>
+              <div class="vitem"><div class="vthumb">C</div><div class="vinfo"><div class="vt"><a href="https://www.youtube.com/@coreyms" target="_blank" rel="noopener">Corey Schafer <span class="prio prio-1">#1</span></a></div><div class="vm">9h gratis YouTube</div><div class="vd">Explica lento y claro. Fundamentos solidos.</div></div></div>
+              <div class="vitem"><div class="vthumb">F</div><div class="vinfo"><div class="vt"><a href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank" rel="noopener">freeCodeCamp Python <span class="prio prio-2">#2</span></a></div><div class="vm">4h gratis</div><div class="vd">Curso acelerado. Directo al grano.</div></div></div>
             </div>
             <div class="stitle">Sem 3-4: ML + Embeddings</div>
             <div class="dacard">
-              <div class="vitem"><div class="vthumb">S</div><div class="vinfo"><div class="vt">StatQuest <span class="prio">#1</span></div><div class="vm">Josh Starmer · 5-15 min</div><div class="vd">ML visual. Convierte mates en dibujitos. BAM!</div></div></div>
-              <div class="vitem"><div class="vthumb">B</div><div class="vinfo"><div class="vt">3Blue1Brown Neural Nets <span class="prio">#1</span></div><div class="vm">Grant Sanderson · 1h</div><div class="vd">Visualizaciones que cambian tu comprensión.</div></div></div>
-              <div class="vitem"><div class="vthumb">H</div><div class="vinfo"><div class="vt">Harvard CS50 AI <span class="prio">#1</span></div><div class="vm">7 semanas gratis</div><div class="vd">Proyectos prácticos: búsqueda, clasificación, NLP.</div></div></div>
-              <div class="vitem"><div class="vthumb">B</div><div class="vinfo"><div class="vt">3Blue1Brown Transformers <span class="prio">#1</span></div><div class="vm">27 min</div><div class="vd">Entiendes atención y transformers SIN leer paper.</div></div></div>
+              <div class="vitem"><div class="vthumb">S</div><div class="vinfo"><div class="vt"><a href="https://www.youtube.com/@statquest" target="_blank" rel="noopener">StatQuest <span class="prio prio-1">#1</span></a></div><div class="vm">Josh Starmer - 5-15 min</div><div class="vd">ML visual. Convierte mates en dibujitos. BAM!</div></div></div>
+              <div class="vitem"><div class="vthumb">B</div><div class="vinfo"><div class="vt"><a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi" target="_blank" rel="noopener">3Blue1Brown Neural Nets <span class="prio prio-1">#1</span></a></div><div class="vm">Grant Sanderson - 1h</div><div class="vd">Visualizaciones que cambian tu comprension.</div></div></div>
+              <div class="vitem"><div class="vthumb">H</div><div class="vinfo"><div class="vt"><a href="https://cs50.harvard.edu/ai/" target="_blank" rel="noopener">Harvard CS50 AI <span class="prio prio-1">#1</span></a></div><div class="vm">7 semanas gratis</div><div class="vd">Proyectos practicos: busqueda, clasificacion, NLP.</div></div></div>
+              <div class="vitem"><div class="vthumb">B</div><div class="vinfo"><div class="vt"><a href="https://www.youtube.com/watch?v=wjZofJX0v4M" target="_blank" rel="noopener">3Blue1Brown Transformers <span class="prio prio-1">#1</span></a></div><div class="vm">27 min</div><div class="vd">Entiendes atencion y transformers SIN leer paper.</div></div></div>
             </div>
             <div class="stitle">Sem 5-6: LLMs + RAG</div>
             <div class="dacard">
-              <div class="vitem"><div class="vthumb">L</div><div class="vinfo"><div class="vt">LangChain Tutorials <span class="prio">#2</span></div><div class="vm">15 lecciones</div><div class="vd">Ruta: fundamentos, chains, memoria, agentes, RAG.</div></div></div>
-              <div class="vitem"><div class="vthumb">R</div><div class="vinfo"><div class="vt">RAG Tutorial 2026 <span class="prio">#2</span></div><div class="vm">Escrito + código</div><div class="vd">LangChain + ChromaDB con PDF real.</div></div></div>
-              <div class="vitem"><div class="vthumb">I</div><div class="vinfo"><div class="vt">IBM Technology <span class="prio">#3</span></div><div class="vm">5-10 min</div><div class="vd">Conceptos IA claros: RAG, fine-tuning, agentes.</div></div></div>
+              <div class="vitem"><div class="vthumb">L</div><div class="vinfo"><div class="vt"><a href="https://python.langchain.com/docs/tutorials/" target="_blank" rel="noopener">LangChain Tutorials <span class="prio prio-2">#2</span></a></div><div class="vm">15 lecciones</div><div class="vd">Ruta: fundamentos, chains, memoria, agentes, RAG.</div></div></div>
+              <div class="vitem"><div class="vthumb">R</div><div class="vinfo"><div class="vt"><a href="https://python.langchain.com/docs/tutorials/rag/" target="_blank" rel="noopener">RAG Tutorial <span class="prio prio-2">#2</span></a></div><div class="vm">Escrito + codigo</div><div class="vd">LangChain + ChromaDB con PDF real.</div></div></div>
+              <div class="vitem"><div class="vthumb">I</div><div class="vinfo"><div class="vt"><a href="https://www.youtube.com/@IBMTechnology" target="_blank" rel="noopener">IBM Technology <span class="prio prio-3">#3</span></a></div><div class="vm">5-10 min</div><div class="vd">Conceptos IA claros: RAG, fine-tuning, agentes.</div></div></div>
             </div>
             <div class="stitle">Sem 7-8: Agentes + Proyecto</div>
             <div class="dacard">
-              <div class="vitem"><div class="vthumb">T</div><div class="vinfo"><div class="vt">Tech With Tim <span class="prio">#2</span></div><div class="vm">Proyectos ML/IA</div><div class="vd">Chatbots, agentes, ML. Buenos para portfolio.</div></div></div>
-              <div class="vitem"><div class="vthumb">N</div><div class="vinfo"><div class="vt">Nicholas Renotte <span class="prio">#3</span></div><div class="vm">Proyectos visuales</div><div class="vd">Motivacional. Portfolios visuales.</div></div></div>
-              <div class="vitem"><div class="vthumb">K</div><div class="vinfo"><div class="vt">Krish Naik <span class="prio">#3</span></div><div class="vm">End-to-end ML</div><div class="vd">Flask, Docker, AWS. Enfocado a producción.</div></div></div>
+              <div class="vitem"><div class="vthumb">T</div><div class="vinfo"><div class="vt"><a href="https://www.youtube.com/@TechWithTim" target="_blank" rel="noopener">Tech With Tim <span class="prio prio-2">#2</span></a></div><div class="vm">Proyectos ML/IA</div><div class="vd">Chatbots, agentes, ML. Buenos para portfolio.</div></div></div>
+              <div class="vitem"><div class="vthumb">N</div><div class="vinfo"><div class="vt"><a href="https://www.youtube.com/@NicholasRenotte" target="_blank" rel="noopener">Nicholas Renotte <span class="prio prio-3">#3</span></a></div><div class="vm">Proyectos visuales</div><div class="vd">Motivacional. Portfolios visuales.</div></div></div>
+              <div class="vitem"><div class="vthumb">K</div><div class="vinfo"><div class="vt"><a href="https://www.youtube.com/@krishnaik06" target="_blank" rel="noopener">Krish Naik <span class="prio prio-3">#3</span></a></div><div class="vm">End-to-end ML</div><div class="vd">Flask, Docker, AWS. Enfocado a produccion.</div></div></div>
             </div>
           </div>
 
-          <!-- ===== DA: RECURSOS ===== -->
+          <!-- DA: RECURSOS -->
           <div class="da-content" id="da-recursos">
             <div class="dacard">
-              <h3>■ Stack Tecnológico</h3>
-              <h4>Instalación (Día 0)</h4>
-              <ul><li>Python 3.12 · VS Code · Git · Docker · Postman</li></ul>
-              <h4>Librerías</h4>
+              <h3>Stack Tecnologico</h3>
+              <h4>Instalacion (Dia 0)</h4>
+              <ul><li>Python 3.12 - VS Code - Git - Docker - Postman</li></ul>
+              <h4>Librerias</h4>
               <ul><li><b>Nivel 1:</b> pandas, openpyxl, requests</li><li><b>Nivel 2:</b> scikit-learn, joblib, flask, matplotlib</li><li><b>Nivel 3:</b> langchain, chromadb, openai, sentence-transformers</li><li><b>Nivel 4:</b> pypdf, streamlit, python-dotenv, fastapi</li></ul>
             </div>
             <div class="dacard">
-              <h3>■ Cursos Harvard Gratis</h3>
-              <ul><li><b>CS50P:</b> Python · cs50.harvard.edu/python</li><li><b>CS50x:</b> Intro a CS · cs50.harvard.edu/x</li><li><b>CS50 AI:</b> IA con Python · cs50.harvard.edu/ai</li></ul>
+              <h3>Cursos Harvard Gratis</h3>
+              <ul><li><b>CS50P:</b> Python - cs50.harvard.edu/python</li><li><b>CS50x:</b> Intro a CS - cs50.harvard.edu/x</li><li><b>CS50 AI:</b> IA con Python - cs50.harvard.edu/ai</li></ul>
             </div>
             <div class="dacard">
-              <h3>■ Proyectos del Portfolio</h3>
-              <ul><li><b>P1</b> (Sem 1-2): AutoMail — leer Excel + enviar correos</li><li><b>P2</b> (Sem 3-4): EduPredict — API Flask predice reprobación</li><li><b>P3</b> (Sem 5-6): FaqBot — chatbot con memoria + embeddings</li><li><b>P4</b> (Sem 7-8): EduAssist — 3 agentes RAG+Predict+Admin</li></ul>
+              <h3>Proyectos del Portfolio</h3>
+              <ul><li><b>P1</b> (Sem 1-2): AutoMail - leer Excel + enviar correos</li><li><b>P2</b> (Sem 3-4): EduPredict - API Flask predice reprobacion</li><li><b>P3</b> (Sem 5-6): FaqBot - chatbot con memoria + embeddings</li><li><b>P4</b> (Sem 7-8): EduAssist - 3 agentes RAG+Predict+Admin</li></ul>
             </div>
           </div>
 
-          <!-- ===== DA: PROMPTS ===== -->
+          <!-- DA: PROMPTS -->
           <div class="da-content" id="da-prompts">
             <div class="dacard">
-              <h3>⚡ Diccionario del Vibecoder</h3>
+              <h3>Diccionario del Vibecoder</h3>
               <p>10 prompts universales. Copia y pega.</p>
             </div>
-            <div class="dacard"><h3>1. Generar código base</h3><div class="prompt-box">"Eres senior en [Python]. Genera un script que [descripción]. Incluye: logging, try/except, type hints, comentarios. Que sea ejecutable."</div></div>
-            <div class="dacard"><h3>2. Depurar error</h3><div class="prompt-box">"Código: [pegarlo]. Error: [pegarlo]. Dame 3 causas probables, cómo verificarlas, código corregido."</div></div>
-            <div class="dacard"><h3>3. Explicar código</h3><div class="prompt-box">"Explica este código como si tuviera 15 años. Qué hace cada bloque, por qué es necesario, qué pasa si lo quito."</div></div>
-            <div class="dacard"><h3>4. Refactorizar</h3><div class="prompt-box">"Refactoriza: más legible, modular, funciones, type hints, PEP8. No cambies funcionalidad."</div></div>
-            <div class="dacard"><h3>5. Añadir feature</h3><div class="prompt-box">"A este código quiero añadir [feature]. Solo muéstrame qué líneas añadir, dónde, qué imports."</div></div>
-            <div class="dacard"><h3>6. Mejorar prompts</h3><div class="prompt-box">"Mejora este prompt: [mi prompt]. Hazlo más específico con restricciones y formato de salida."</div></div>
-            <div class="dacard"><h3>7. Escribir tests</h3><div class="prompt-box">"Tests con pytest para este código: caso normal, borde, error. Usa assert y parametrize."</div></div>
-            <div class="dacard"><h3>8-10. Comparar · Convertir · Seguridad</h3><div class="prompt-box">"Compara [lib A] vs [lib B] para [tarea]" · "Convierte de [lib A] a [lib B]" · "Revisa vulnerabilidades en este código"</div></div>
+            <div class="dacard"><h3>1. Generar codigo base</h3><div class="prompt-box">"Eres senior en [Python]. Genera un script que [descripcion]. Incluye: logging, try/except, type hints, comentarios. Que sea ejecutable."</div></div>
+            <div class="dacard"><h3>2. Depurar error</h3><div class="prompt-box">"Codigo: [pegarlo]. Error: [pegarlo]. Dame 3 causas probables, como verificarlas, codigo corregido."</div></div>
+            <div class="dacard"><h3>3. Explicar codigo</h3><div class="prompt-box">"Explica este codigo como si tuviera 15 anos. Que hace cada bloque, por que es necesario, que pasa si lo quito."</div></div>
+            <div class="dacard"><h3>4. Refactorizar</h3><div class="prompt-box">"Refactoriza: mas legible, modular, funciones, type hints, PEP8. No cambies funcionalidad."</div></div>
+            <div class="dacard"><h3>5. Anadir feature</h3><div class="prompt-box">"A este codigo quiero anadir [feature]. Solo muestrame que lineas anadir, donde, que imports."</div></div>
+            <div class="dacard"><h3>6. Mejorar prompts</h3><div class="prompt-box">"Mejora este prompt: [mi prompt]. Hazlo mas especifico con restricciones y formato de salida."</div></div>
+            <div class="dacard"><h3>7. Escribir tests</h3><div class="prompt-box">"Tests con pytest para este codigo: caso normal, borde, error. Usa assert y parametrize."</div></div>
+            <div class="dacard"><h3>8-10. Comparar - Convertir - Seguridad</h3><div class="prompt-box">"Compara [lib A] vs [lib B] para [tarea]" - "Convierte de [lib A] a [lib B]" - "Revisa vulnerabilidades en este codigo"</div></div>
           </div>
 
-          <!-- ===== DA: PLAN B ===== -->
+          <!-- DA: PLAN B -->
           <div class="da-content" id="da-planb">
             <div class="dacard">
-              <h3>▲ Plan de Contingencia</h3>
+              <h3>Plan de Contingencia</h3>
               <p>3 atajos para cuando te estanques.</p>
             </div>
             <div class="dacard">
-              <h3>⚡ Atajo 1: ML sin teoría</h3>
-              <ul><li>Solo memoriza: <code>import → split → fit → predict → score</code></li><li>Random Forest funciona sin tuning.</li><li>¿Accuracy baja? → más datos, no cambiar modelo.</li></ul>
+              <h3>Atajo 1: ML sin teoria</h3>
+              <ul><li>Solo memoriza: <code>import - split - fit - predict - score</code></li><li>Random Forest funciona sin tuning.</li><li>Accuracy baja? - mas datos, no cambiar modelo.</li></ul>
             </div>
             <div class="dacard">
-              <h3>⚡ Atajo 2: Error → IA</h3>
-              <ul><li>Copia el error a ChatGPT: "Explica como si tuviera 12 años"</li><li>VS Code: selecciona error → Ctrl+I → "Fix this"</li><li><b>Regla:</b> máx 30 min por error. Pídele a la IA.</li></ul>
+              <h3>Atajo 2: Error - IA</h3>
+              <ul><li>Copia el error a ChatGPT: "Explica como si tuviera 12 anos"</li><li>VS Code: selecciona error - Ctrl+I - "Fix this"</li><li><b>Regla:</b> max 30 min por error. Pidele a la IA.</li></ul>
             </div>
             <div class="dacard">
-              <h3>⚡ Atajo 3: LangChain manual</h3>
-              <ul><li>RAG con Python puro: <code>openai.Embedding.create()</code> + numpy para coseno</li><li>Fórmula: <code>sim = np.dot(e1,e2)/(np.linalg.norm(e1)*np.linalg.norm(e2))</code></li></ul>
+              <h3>Atajo 3: LangChain manual</h3>
+              <ul><li>RAG con Python puro: <code>openai.Embedding.create()</code> + numpy para coseno</li><li>Formula: <code>sim = np.dot(e1,e2)/(np.linalg.norm(e1)*np.linalg.norm(e2))</code></li></ul>
             </div>
             <div class="dacard">
-              <h3>📉 Plan B por atraso</h3>
+              <h3>Plan B por atraso</h3>
               <ul><li><b>Sem 1-2 atrasada?</b> Salta API, ve directo a ML</li><li><b>Sem 5-6 atrasada?</b> Salta ChromaDB, usa FAISS</li><li><b>Nunca</b> saltes el proyecto final. Hazlo aunque sea solo RAG.</li></ul>
             </div>
             <div class="dacard">
-              <h3>🔄 Depuración en 15 min</h3>
-              <ul><li><b>0-5 min:</b> Lees el error, buscas typo</li><li><b>5-10 min:</b> IA: "Dime 3 causas"</li><li><b>10-15 min:</b> "Reescribe más simple"</li><li><b>>15 min:</b> Borra, prompt diferente</li></ul>
+              <h3>Depuracion en 15 min</h3>
+              <ul><li><b>0-5 min:</b> Lees el error, buscas typo</li><li><b>5-10 min:</b> IA: "Dime 3 causas"</li><li><b>10-15 min:</b> "Reescribe mas simple"</li><li><b>>15 min:</b> Borra, prompt diferente</li></ul>
             </div>
           </div>
 
         </div><!-- /da-container -->
 
         <!-- BOOT LINE -->
-        <div class="boot-line">System 1.1 · <span>Fansia OS</span> · © 1984-2026</div>
+        <div class="boot-line">Fansia OS <span>v2.0</span> - 1984-2026</div>
 
       </div><!-- /scrollable-content -->
     </div><!-- /window-body -->
   </div><!-- /window -->
 
-  <!-- TRASH -->
+  <!-- TRASH (SVG pixel art) -->
   <div class="desktop-bottom">
-    <div class="trash-icon" onclick="trashClick()">🗑</div>
+    <div class="trash-icon" onclick="trashClick()">
+      <svg viewBox="0 0 18 20">
+        <rect x="4" y="2" width="10" height="3" fill="#86868B"/>
+        <rect x="2" y="5" width="14" height="13" fill="#86868B"/>
+        <rect x="3" y="6" width="2" height="10" fill="#fff"/>
+        <rect x="8" y="6" width="2" height="10" fill="#fff"/>
+        <rect x="13" y="6" width="2" height="10" fill="#fff"/>
+      </svg>
+    </div>
     <div class="trash-label">Trash</div>
   </div>
 
 <script>
 const WEEK_DATA = [
-  { t: "Semana 0 — Preparación", b: "<h4>Objetivo</h4><p>Entorno listo. Sin escribir código.</p><h4>Instalar</h4><ul><li>Python 3.12</li><li>VS Code + extensiones</li><li>Git + GitHub Desktop</li><li>Docker Desktop</li><li>Postman</li></ul><h4>Cuentas</h4><ul><li>GitHub · ChatGPT · OpenAI API ($5 crédito)</li></ul>" },
-  { t: "Semana 1 — Python + Automatización", b: "<h4>Objetivo</h4><p>Escribir scripts que lean archivos y envíen correos.</p><h4>Temas</h4><ul><li>Python: variables, listas, dicts, loops, funciones</li><li>openpyxl + smtplib</li><li>Git básico</li></ul><h4>Proyecto: MailMasivoExcel</h4><p>Lee Excel con [Nombre, Email, Nota] y envía correo personalizado.</p>" },
-  { t: "Semana 2 — Pandas + APIs", b: "<h4>Objetivo</h4><p>Consumir APIs y generar reportes Excel.</p><h4>Temas</h4><ul><li>Pandas: read_csv, groupby, to_excel</li><li>Requests + API REST</li><li>CSV, JSON, Excel</li></ul><h4>Proyecto: ReporteadorAutomático</h4><p>API clima → Pandas → Excel con promedio/máx/mín.</p>" },
-  { t: "Semana 3 — Embeddings (corazón IA)", b: "<h4>Objetivo</h4><p>Vectores, similaridad semántica, buscador manual.</p><h4>Temas</h4><ul><li>Embeddings: texto → vectores</li><li>Similaridad del coseno</li><li>Sentence-Transformers + numpy</li></ul><h4>Proyecto: FAQ Semántico</h4><p>Chatbot terminal que busca FAQ por similaridad. Sin LangChain.</p>" },
-  { t: "Semana 4 — ML + Random Forest", b: "<h4>Objetivo</h4><p>Entrenar modelo predictivo y desplegar API.</p><h4>Temas</h4><ul><li>Scikit-learn: split → fit → predict → score</li><li>Random Forest</li><li>Flask + joblib</li></ul><h4>Proyecto: EduPredict API</h4><p>API Flask que predice reprobación. Dockerizada.</p>" },
-  { t: "Semana 5 — LLMs + Prompt Engineering", b: "<h4>Objetivo</h4><p>Chatbots con memoria y tools usando APIs LLM.</p><h4>Temas</h4><ul><li>OpenAI API: ChatCompletion, system prompt, temperatura</li><li>LangChain básico</li><li>Memoria + Tool calling</li></ul><h4>Proyecto: ChatbotAtenciónCliente</h4><p>Chatbot con memoria + tools (clima, calculadora).</p>" },
-  { t: "Semana 6 — RAG + Chatbots", b: "<h4>Objetivo</h4><p>Agente que lea PDFs y responda con RAG.</p><h4>Temas</h4><ul><li>PyPDFLoader + TextSplitter</li><li>ChromaDB + embeddings</li><li>RetrievalQA chain</li></ul><h4>Proyecto: RAG-ManualEscolar</h4><p>PDF escolar → responde preguntas con RAG + memoria.</p>" },
-  { t: "Semana 7 — Agentes + Multi-agente", b: "<h4>Objetivo</h4><p>Sistema multi-agente con router de intenciones.</p><h4>Temas</h4><ul><li>Agentes con loop de razonamiento</li><li>Router de intenciones (embeddings)</li><li>Memoria persistente (SQLite)</li></ul><h4>Proyecto: Sistema Multi-agente</h4><p>Router + RAG + Predict + Admin. Evaluación automática.</p>" },
-  { t: "Semana 8 — PROYECTO FINAL: EduAssist", b: "<h4>Objetivo</h4><p>Asistente Educativo completo, dockerizado, con UI y portfolio.</p><h4>Temas</h4><ul><li>Streamlit UI</li><li>Integración multi-agente</li><li>Docker + docker-compose</li><li>README profesional</li></ul><h4>EduAssist</h4><p>3 agentes: RAG + Predictivo + Admin. Streamlit. Docker. GitHub.</p>" }
+  { t: "Semana 0 - Preparacion", b: "<h4>Objetivo</h4><p>Entorno listo. Sin escribir codigo.</p><h4>Instalar</h4><ul><li>Python 3.12</li><li>VS Code + extensiones</li><li>Git + GitHub Desktop</li><li>Docker Desktop</li><li>Postman</li></ul><h4>Cuentas</h4><ul><li>GitHub - ChatGPT - OpenAI API ($5 credito)</li></ul>" },
+  { t: "Semana 1 - Python + Automatizacion", b: "<h4>Objetivo</h4><p>Escribir scripts que lean archivos y envien correos.</p><h4>Temas</h4><ul><li>Python: variables, listas, dicts, loops, funciones</li><li>openpyxl + smtplib</li><li>Git basico</li></ul><h4>Proyecto: MailMasivoExcel</h4><p>Lee Excel con [Nombre, Email, Nota] y envia correo personalizado.</p>" },
+  { t: "Semana 2 - Pandas + APIs", b: "<h4>Objetivo</h4><p>Consumir APIs y generar reportes Excel.</p><h4>Temas</h4><ul><li>Pandas: read_csv, groupby, to_excel</li><li>Requests + API REST</li><li>CSV, JSON, Excel</li></ul><h4>Proyecto: ReporteadorAutomatico</h4><p>API clima - Pandas - Excel con promedio/max/min.</p>" },
+  { t: "Semana 3 - Embeddings (corazon IA)", b: "<h4>Objetivo</h4><p>Vectores, similaridad semantica, buscador manual.</p><h4>Temas</h4><ul><li>Embeddings: texto - vectores</li><li>Similaridad del coseno</li><li>Sentence-Transformers + numpy</li></ul><h4>Proyecto: FAQ Semantico</h4><p>Chatbot terminal que busca FAQ por similaridad. Sin LangChain.</p>" },
+  { t: "Semana 4 - ML + Random Forest", b: "<h4>Objetivo</h4><p>Entrenar modelo predictivo y desplegar API.</p><h4>Temas</h4><ul><li>Scikit-learn: split - fit - predict - score</li><li>Random Forest</li><li>Flask + joblib</li></ul><h4>Proyecto: EduPredict API</h4><p>API Flask que predice reprobacion. Dockerizada.</p>" },
+  { t: "Semana 5 - LLMs + Prompt Engineering", b: "<h4>Objetivo</h4><p>Chatbots con memoria y tools usando APIs LLM.</p><h4>Temas</h4><ul><li>OpenAI API: ChatCompletion, system prompt, temperatura</li><li>LangChain basico</li><li>Memoria + Tool calling</li></ul><h4>Proyecto: ChatbotAtencionCliente</h4><p>Chatbot con memoria + tools (clima, calculadora).</p>" },
+  { t: "Semana 6 - RAG + Chatbots", b: "<h4>Objetivo</h4><p>Agente que lea PDFs y responda con RAG.</p><h4>Temas</h4><ul><li>PyPDFLoader + TextSplitter</li><li>ChromaDB + embeddings</li><li>RetrievalQA chain</li></ul><h4>Proyecto: RAG-ManualEscolar</h4><p>PDF escolar - responde preguntas con RAG + memoria.</p>" },
+  { t: "Semana 7 - Agentes + Multi-agente", b: "<h4>Objetivo</h4><p>Sistema multi-agente con router de intenciones.</p><h4>Temas</h4><ul><li>Agentes con loop de razonamiento</li><li>Router de intenciones (embeddings)</li><li>Memoria persistente (SQLite)</li></ul><h4>Proyecto: Sistema Multi-agente</h4><p>Router + RAG + Predict + Admin. Evaluacion automatica.</p>" },
+  { t: "Semana 8 - PROYECTO FINAL: EduAssist", b: "<h4>Objetivo</h4><p>Asistente Educativo completo, dockerizado, con UI y portfolio.</p><h4>Temas</h4><ul><li>Streamlit UI</li><li>Integracion multi-agente</li><li>Docker + docker-compose</li><li>README profesional</li></ul><h4>EduAssist</h4><p>3 agentes: RAG + Predictivo + Admin. Streamlit. Docker. GitHub.</p>" }
 ];
+
+// SVG definitions for profile icons
+const PROFILE_SVGS = {
+  star: '<svg viewBox="0 0 20 20" width="20" height="20"><rect x="8" y="2" width="4" height="4" fill="#007AFF"/><rect x="6" y="6" width="8" height="4" fill="#007AFF"/><rect x="4" y="10" width="4" height="2" fill="#007AFF"/><rect x="12" y="10" width="4" height="2" fill="#007AFF"/><rect x="6" y="12" width="8" height="2" fill="#007AFF"/><rect x="8" y="14" width="4" height="2" fill="#007AFF"/></svg>',
+  moon: '<svg viewBox="0 0 20 20" width="20" height="20"><rect x="14" y="2" width="4" height="4" fill="#007AFF"/><rect x="12" y="6" width="6" height="4" fill="#007AFF"/><rect x="10" y="10" width="8" height="4" fill="#007AFF"/><rect x="4" y="10" width="4" height="2" fill="#007AFF"/><rect x="10" y="14" width="6" height="4" fill="#007AFF"/></svg>',
+  heart: '<svg viewBox="0 0 20 20" width="20" height="20"><rect x="2" y="4" width="4" height="4" fill="#FF3B30"/><rect x="14" y="4" width="4" height="4" fill="#FF3B30"/><rect x="4" y="2" width="4" height="4" fill="#FF3B30"/><rect x="12" y="2" width="4" height="4" fill="#FF3B30"/><rect x="6" y="6" width="8" height="4" fill="#FF3B30"/><rect x="4" y="10" width="12" height="4" fill="#FF3B30"/><rect x="6" y="14" width="8" height="2" fill="#FF3B30"/><rect x="8" y="16" width="4" height="2" fill="#FF3B30"/></svg>',
+  diamond: '<svg viewBox="0 0 20 20" width="20" height="20"><rect x="8" y="0" width="4" height="4" fill="#FF9500"/><rect x="6" y="4" width="8" height="4" fill="#FF9500"/><rect x="4" y="8" width="12" height="4" fill="#FF9500"/><rect x="6" y="12" width="8" height="4" fill="#FF9500"/><rect x="8" y="16" width="4" height="4" fill="#FF9500"/></svg>',
+  person: '<svg viewBox="0 0 20 20" width="20" height="20"><rect x="6" y="2" width="8" height="6" fill="#007AFF"/><rect x="4" y="8" width="12" height="6" fill="#007AFF"/><rect x="2" y="14" width="16" height="6" fill="#007AFF"/></svg>'
+};
 
 function init() {
   const n = localStorage.getItem('fansia_name');
@@ -811,8 +885,10 @@ function init() {
   });
 
   const ic = localStorage.getItem('fansia_icon');
-  if (ic) { document.getElementById('picon').innerHTML = ic;
-    document.querySelectorAll('.iopt').forEach(el => el.classList.toggle('sel', el.dataset.i === ic)); }
+  if (ic && PROFILE_SVGS[ic]) {
+    document.getElementById('picon').innerHTML = PROFILE_SVGS[ic];
+    document.querySelectorAll('.iopt').forEach(el => el.classList.toggle('sel', el.dataset.i === ic));
+  }
 
   const d = localStorage.getItem('fansia_diary');
   if (d) document.getElementById('diary').value = d;
@@ -843,15 +919,18 @@ function init() {
 
 function updateGreeting() {
   const name = document.getElementById('pname').value.trim();
-  document.getElementById('greeting').textContent = name ? 'Bienvenido, ' + name : 'Bienvenido, viajer@';
+  document.getElementById('greeting').textContent = name ? 'Bienvenido, ' + name : 'Bienvenido';
 }
 
 function toggleIcons() { document.getElementById('iconStrip').classList.toggle('open'); }
 document.querySelectorAll('.iopt').forEach(el => { el.addEventListener('click', function() {
   document.querySelectorAll('.iopt').forEach(e => e.classList.remove('sel'));
   this.classList.add('sel');
-  document.getElementById('picon').innerHTML = this.dataset.i;
-  localStorage.setItem('fansia_icon', this.dataset.i);
+  const key = this.dataset.i;
+  if (PROFILE_SVGS[key]) {
+    document.getElementById('picon').innerHTML = PROFILE_SVGS[key];
+  }
+  localStorage.setItem('fansia_icon', key);
   setTimeout(() => document.getElementById('iconStrip').classList.remove('open'), 200);
 }); });
 
@@ -865,8 +944,8 @@ function saveDiary() {
   const t = document.getElementById('diary').value;
   localStorage.setItem('fansia_diary', t);
   const s = document.getElementById('diaryStatus');
-  s.textContent = '✓ ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  setTimeout(() => { s.textContent = 'Guardado'; }, 3000);
+  s.textContent = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  setTimeout(() => { s.textContent = '-'; }, 3000);
 }
 function clearDiary() { if (!confirm('Borrar entrada?')) return; document.getElementById('diary').value = ''; localStorage.removeItem('fansia_diary'); document.getElementById('diaryStatus').textContent = 'Borrado'; }
 
@@ -887,7 +966,7 @@ function buildCalendar() {
     if (diff < 0) div.classList.add('pst'); else if (diff === 0) div.classList.add('tdy'); else div.classList.add('rem');
     grid.appendChild(div);
   }
-  document.getElementById('calStatus').textContent = left + ' días restantes';
+  document.getElementById('calStatus').textContent = left + ' dias restantes';
   document.getElementById('calCount').textContent = el + ' / 60';
 }
 
@@ -899,11 +978,11 @@ function updateAll() {
   document.getElementById('pctText').textContent = pct + '%';
   const start = localStorage.getItem('fansia_start');
   const days = start ? Math.min(Math.floor((Date.now() - parseInt(start)) / 86400000), 60) : 0;
-  document.getElementById('pov').textContent = 'Día ' + days + ' de 60';
+  document.getElementById('pov').textContent = 'Dia ' + days + ' de 60';
   const wk = Math.min(Math.floor(days / 7) + 1, 9);
-  const wt = ['Preparación','Python+Auto','Pandas+APIs','Embeddings','ML+RF','LLMs+Prompt','RAG','Agentes','Proyecto Final'];
-  document.getElementById('weekLabel').textContent = 'Semana ' + Math.min(wk,8) + ' · ' + wt[Math.min(wk,8)];
-  document.getElementById('dayLabel').textContent = '◆ ' + days + ' días';
+  const wt = ['Preparacion','Python+Auto','Pandas+APIs','Embeddings','ML+RF','LLMs+Prompt','RAG','Agentes','Proyecto Final'];
+  document.getElementById('weekLabel').textContent = 'Semana ' + Math.min(wk,8) + ' - ' + wt[Math.min(wk,8)];
+  document.getElementById('dayLabel').textContent = days + ' dias';
   document.getElementById('chkCount').textContent = '(' + dChk + '/' + tChk + ')';
   let proj = 0; [2,4,6,8].forEach(w => { const el = document.querySelector(`[data-w="${w}"]`); if (el && el.classList.contains('done')) proj++; });
   localStorage.setItem('fansia_proj', proj.toString());
