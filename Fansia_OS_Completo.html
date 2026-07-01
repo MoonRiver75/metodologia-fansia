@@ -25,16 +25,25 @@
     --inverse-text: #FFFFFF;
     --shadow: rgba(0,0,0,0.4);
     --pixel: 1px;
+    --apple-red: #E30613;
+    --apple-orange: #FF5E00;
+    --apple-yellow: #FFD12A;
+    --apple-green: #00A650;
+    --apple-blue: #0066CC;
+    --apple-purple: #7B2D8E;
+    --apple-teal: #00A6A6;
+    --ai-glow: #00CCFF;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; image-rendering: pixelated; }
+  ::selection { background: var(--apple-blue); color: var(--white); }
 
   body {
     margin: 0;
     min-height: 100vh;
     background: var(--bg);
     background-image:
-      radial-gradient(circle, #DDDDDD 1px, transparent 1px);
+      radial-gradient(circle, #CCCCCC 1px, transparent 1px);
     background-size: 8px 8px;
     display: flex;
     justify-content: center;
@@ -46,7 +55,7 @@
     padding-bottom: 20px;
   }
 
-  /* ------ MENU BAR (classic Mac) ------ */
+  /* ------ MENU BAR (1995 Apple + AI) ------ */
   .menu-bar {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -68,6 +77,10 @@
     padding: 1px 4px;
     cursor: default;
     font-weight: 700;
+    background: linear-gradient(180deg, var(--apple-red) 0%, var(--apple-red) 16%, var(--apple-orange) 16%, var(--apple-orange) 33%, var(--apple-yellow) 33%, var(--apple-yellow) 50%, var(--apple-green) 50%, var(--apple-green) 66%, var(--apple-blue) 66%, var(--apple-blue) 83%, var(--apple-purple) 83%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   .menu-bar .menu-item {
     padding: 2px 8px;
@@ -76,7 +89,7 @@
     font-size: 11px;
     font-weight: 700;
   }
-  .menu-bar .menu-item:active { background: var(--highlight); color: var(--inverse-text); }
+  .menu-bar .menu-item:active { background: var(--apple-blue); color: var(--inverse-text); }
   .menu-bar .spacer { flex: 1; }
   .menu-bar .clock {
     font-size: 11px;
@@ -84,29 +97,58 @@
     padding: 2px 6px;
     cursor: default;
     user-select: none;
+    color: var(--apple-blue);
   }
 
-  /* ------ MAIN WINDOW (System 7 style) ------ */
+  /* ------ MAIN WINDOW (System 7 + AI accents) ------ */
   .window {
     width: 100%;
     max-width: 460px;
     margin: 4px 12px 20px;
     background: var(--card);
     border: 2px solid var(--border);
-    box-shadow: 4px 4px 0 var(--shadow);
+    box-shadow: 4px 4px 0 rgba(0,102,204,0.3);
     position: relative;
     display: flex;
     flex-direction: column;
   }
 
-  /* ------ TITLE BAR (striped pattern) ------ */
+  /* ------ TITLE BAR (rainbow stripes) ------ */
   .title-bar {
     background: repeating-linear-gradient(
       0deg,
-      var(--stripe1) 0px,
-      var(--stripe1) 2px,
-      var(--stripe2) 2px,
-      var(--stripe2) 4px
+      var(--apple-red) 0px,
+      var(--apple-red) 1px,
+      var(--apple-orange) 1px,
+      var(--apple-orange) 2px,
+      var(--apple-yellow) 2px,
+      var(--apple-yellow) 3px,
+      var(--apple-green) 3px,
+      var(--apple-green) 4px,
+      var(--apple-blue) 4px,
+      var(--apple-blue) 5px,
+      var(--apple-purple) 5px,
+      var(--apple-purple) 6px,
+      var(--apple-red) 6px,
+      var(--apple-red) 7px,
+      var(--apple-orange) 7px,
+      var(--apple-orange) 8px,
+      var(--apple-yellow) 8px,
+      var(--apple-yellow) 9px,
+      var(--apple-green) 9px,
+      var(--apple-green) 10px,
+      var(--apple-blue) 10px,
+      var(--apple-blue) 11px,
+      var(--apple-purple) 11px,
+      var(--apple-purple) 12px,
+      var(--stripe1) 12px,
+      var(--stripe1) 14px,
+      var(--stripe2) 14px,
+      var(--stripe2) 16px,
+      var(--stripe1) 16px,
+      var(--stripe1) 18px,
+      var(--stripe2) 18px,
+      var(--stripe2) 20px
     );
     height: 20px;
     border-bottom: 2px solid var(--border);
@@ -119,7 +161,7 @@
   .title-bar .close-box {
     width: 10px; height: 10px;
     border: 1px solid var(--border);
-    background: var(--highlight);
+    background: var(--apple-red);
     margin-right: 6px;
     flex-shrink: 0;
     cursor: pointer;
@@ -137,11 +179,11 @@
   .title-bar .zoom-box {
     width: 10px; height: 10px;
     border: 1px solid var(--border);
-    background: var(--white);
+    background: var(--apple-green);
     flex-shrink: 0;
     cursor: pointer;
   }
-  .title-bar .zoom-box:active { background: var(--highlight); }
+  .title-bar .zoom-box:active { background: var(--apple-blue); }
 
   /* ------ WINDOW BODY ------ */
   .window-body {
@@ -153,7 +195,7 @@
   }
   .window-body::-webkit-scrollbar { width: 10px; }
   .window-body::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--border); }
-  .window-body::-webkit-scrollbar-thumb { background: var(--bg); border: 1px solid var(--border); }
+  .window-body::-webkit-scrollbar-thumb { background: var(--apple-blue); border: 1px solid var(--border); }
 
   /* ------ PROFILE ------ */
   .profile-section {
@@ -164,6 +206,7 @@
     align-items: center;
     gap: 10px;
     background: var(--card);
+    border-left: 4px solid var(--apple-blue);
   }
   .profile-icon {
     width: 44px; height: 44px;
@@ -176,15 +219,15 @@
     background: var(--bg);
     padding: 4px;
   }
-  .profile-icon:active { background: var(--highlight); }
+  .profile-icon:active { background: var(--apple-blue); }
   .profile-icon svg rect { fill: var(--text) !important; }
   .profile-text { flex: 1; overflow: hidden; }
-  .profile-text .greet { font-size: 10px; color: var(--text-dim); font-weight: 700; }
+  .profile-text .greet { font-size: 10px; color: var(--apple-blue); font-weight: 700; }
   .profile-text .pname {
     font-size: 14px; font-weight: 700;
     border: none; background: transparent; width: 100%; outline: none;
     color: var(--text); padding: 1px 0;
-    border-bottom: 2px dashed var(--border);
+    border-bottom: 2px dashed var(--apple-blue);
     font-family: inherit;
   }
   .icon-strip {
@@ -207,8 +250,8 @@
     background: var(--bg);
     padding: 4px;
   }
-  .icon-strip .iopt:active { background: var(--highlight); }
-  .icon-strip .iopt.sel { border-width: 3px; background: var(--card); }
+  .icon-strip .iopt:active { background: var(--apple-blue); }
+  .icon-strip .iopt.sel { border-width: 3px; border-color: var(--apple-blue); background: var(--card); }
   .icon-strip .iopt svg rect { fill: var(--text) !important; }
 
   /* ------ STATUS BAR ------ */
@@ -217,6 +260,7 @@
     padding: 8px 10px;
     margin-bottom: 8px;
     background: var(--card);
+    border-left: 4px solid var(--apple-green);
   }
   .status-row {
     display: flex;
@@ -239,10 +283,10 @@
     height: 100%;
     background: repeating-linear-gradient(
       90deg,
-      var(--highlight) 0px,
-      var(--highlight) 4px,
-      var(--white) 4px,
-      var(--white) 8px
+      var(--apple-blue) 0px,
+      var(--apple-blue) 4px,
+      var(--apple-teal) 4px,
+      var(--apple-teal) 8px
     );
     transition: width 0.5s;
     width: 0%;
@@ -294,13 +338,13 @@
     stroke: currentColor;
   }
   .da-btn.act {
-    border-color: var(--border);
+    border-color: var(--apple-blue);
     border-bottom-color: var(--card);
-    color: var(--text);
+    color: var(--apple-blue);
     background: var(--card);
     z-index: 1;
   }
-  .da-btn:active { background: var(--highlight); color: var(--inverse-text); }
+  .da-btn:active { background: var(--apple-blue); color: var(--inverse-text); }
 
   .da-content { display: none; padding: 0; }
   .da-content.act { display: block; }
@@ -315,21 +359,23 @@
   .dacard h3 {
     font-size: 12px; font-weight: 700; color: var(--text);
     margin-bottom: 4px;
+    border-bottom: 1px solid var(--bg);
+    padding-bottom: 3px;
   }
   .dacard h4 { font-size: 11px; font-weight: 700; color: var(--text); margin: 6px 0 3px; }
   .dacard p, .dacard li { font-size: 11px; line-height: 1.4; color: var(--text-dim); }
   .dacard ul { padding-left: 16px; }
   .dacard li { margin-bottom: 2px; }
   .dacard a {
-    color: var(--text);
+    color: var(--apple-blue);
     text-decoration: none;
     font-weight: 700;
-    border-bottom: 1px dotted var(--text);
+    border-bottom: 1px dotted var(--apple-blue);
   }
-  .dacard a:active { background: var(--highlight); color: var(--inverse-text); }
+  .dacard a:active { background: var(--apple-blue); color: var(--inverse-text); }
   .dacard .prompt-box {
-    background: var(--bg);
-    border-left: 3px solid var(--border);
+    background: #F5F5FF;
+    border-left: 3px solid var(--apple-purple);
     padding: 6px 8px;
     margin: 4px 0;
     font-size: 10px;
@@ -352,8 +398,8 @@
     padding: 1px 4px;
     margin-left: 3px;
   }
-  .dacard .prio-1 { border-color: var(--border); }
-  .dacard .prio-2 { border-color: var(--border); }
+  .dacard .prio-1 { border-color: var(--apple-red); color: var(--apple-red); }
+  .dacard .prio-2 { border-color: var(--apple-orange); color: var(--apple-orange); }
   .dacard .prio-3 { border-color: var(--text-dim); }
 
   /* ------ WEEK GRID ------ */
@@ -365,8 +411,16 @@
     transition: 0.05s;
     position: relative;
     background: var(--card);
+    border-left: 4px solid var(--apple-blue);
   }
-  .wcell:active { background: var(--highlight); color: var(--inverse-text); }
+  .wcell:nth-child(2) { border-left-color: var(--apple-green); }
+  .wcell:nth-child(3) { border-left-color: var(--apple-yellow); }
+  .wcell:nth-child(4) { border-left-color: var(--apple-orange); }
+  .wcell:nth-child(5) { border-left-color: var(--apple-red); }
+  .wcell:nth-child(6) { border-left-color: var(--apple-purple); }
+  .wcell:nth-child(7) { border-left-color: var(--apple-teal); }
+  .wcell:nth-child(8) { border-left-color: var(--apple-blue); }
+  .wcell:active { background: var(--apple-blue); color: var(--inverse-text); }
   .wcell .wn { font-size: 10px; font-weight: 700; color: var(--text); }
   .wcell .wt { font-size: 9px; color: var(--text-dim); margin-top: 1px; }
   .wcell .wdot {
@@ -375,7 +429,7 @@
     border: 2px solid var(--border);
     background: var(--card);
   }
-  .wcell .wdot.chk { background: var(--highlight); border-color: var(--border); position: relative; }
+  .wcell .wdot.chk { background: var(--apple-green); border-color: var(--apple-green); position: relative; }
   .wcell .wdot.chk::after {
     content: 'X';
     position: absolute;
@@ -404,7 +458,7 @@
     font-size: 10px;
     font-weight: 700;
   }
-  .chk.done .box { background: var(--highlight); border-color: var(--border); }
+  .chk.done .box { background: var(--apple-green); border-color: var(--apple-green); }
   .chk.done .box::after { content: 'X'; color: var(--white); }
   .chk .box { position: relative; }
   .chk .txt { font-size: 11px; line-height: 1.3; flex: 1; color: var(--text); }
@@ -417,6 +471,9 @@
     color: var(--text-dim);
     flex-shrink: 0;
   }
+  .chk .ctag[data-tag="DIA"] { border-color: var(--apple-blue); color: var(--apple-blue); }
+  .chk .ctag[data-tag="NOCHE"] { border-color: var(--apple-purple); color: var(--apple-purple); }
+  .chk .ctag[data-tag="DOM"] { border-color: var(--apple-orange); color: var(--apple-orange); }
 
   /* ------ CALENDAR ------ */
   .calgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
@@ -429,9 +486,9 @@
     background: var(--card);
     color: var(--text);
   }
-  .cald.pst { background: repeating-linear-gradient(45deg, var(--bg) 0px, var(--bg) 3px, var(--card) 3px, var(--card) 6px); color: var(--text); border-color: var(--border); }
-  .cald.tdy { border: 3px solid var(--border); font-weight: 700; }
-  .cald.rem { border-color: var(--border); }
+  .cald.pst { background: repeating-linear-gradient(45deg, #E8F4FF 0px, #E8F4FF 3px, var(--card) 3px, var(--card) 6px); color: var(--text); border-color: var(--apple-blue); }
+  .cald.tdy { border: 3px solid var(--apple-blue); font-weight: 700; }
+  .cald.rem { border-color: var(--apple-blue); }
   .cald.emp { border: none; background: transparent; }
   .calinfo { display: flex; justify-content: space-between; margin-top: 4px; font-size: 9px; color: var(--text-dim); }
 
@@ -449,7 +506,7 @@
     color: var(--text);
     line-height: 1.4;
   }
-  .dentry:focus { background: var(--bg); }
+  .dentry:focus { background: #F5F5FF; border-color: var(--apple-blue); }
   .dfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 10px; color: var(--text-dim); }
   .dfoot .btn {
     border: 2px solid var(--border);
@@ -461,7 +518,7 @@
     cursor: pointer;
     color: var(--text);
   }
-  .dfoot .btn:active { background: var(--highlight); color: var(--inverse-text); }
+  .dfoot .btn:active { background: var(--apple-blue); color: var(--inverse-text); }
 
   /* ------ VIDEO ITEM ------ */
   .vitem { display: flex; gap: 6px; padding: 5px 0; border-bottom: 1px solid var(--bg); }
@@ -469,16 +526,16 @@
   .vthumb {
     width: 34px; height: 34px; border: 2px solid var(--border);
     flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    background: var(--bg); font-weight: 700; font-size: 10px; color: var(--text-dim);
+    background: var(--bg); font-weight: 700; font-size: 10px; color: var(--apple-blue);
   }
   .vinfo { flex: 1; }
   .vinfo .vt { font-size: 11px; font-weight: 700; color: var(--text); }
   .vinfo .vt a { color: var(--text); border: none; }
-  .vinfo .vt a:active { background: var(--highlight); color: var(--inverse-text); }
+  .vinfo .vt a:active { background: var(--apple-blue); color: var(--inverse-text); }
   .vinfo .vm { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
   .vinfo .vd { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
 
-  .stitle { font-size: 11px; font-weight: 700; color: var(--text); margin: 8px 0 4px; }
+  .stitle { font-size: 11px; font-weight: 700; color: var(--text); margin: 8px 0 4px; padding-left: 4px; border-left: 3px solid var(--apple-purple); }
 
   /* ------ BOTTOM TRASH ------ */
   .desktop-bottom {
@@ -490,7 +547,7 @@
     align-items: center;
     gap: 2px;
     z-index: 500;
-    opacity: 0.6;
+    opacity: 0.7;
   }
   .desktop-bottom .trash-icon {
     width: 26px; height: 28px;
@@ -502,13 +559,13 @@
     cursor: pointer;
     padding: 2px;
   }
-  .desktop-bottom .trash-icon:active { background: var(--highlight); }
+  .desktop-bottom .trash-icon:active { background: var(--apple-blue); }
   .desktop-bottom .trash-icon svg { width: 16px; height: 18px; }
   .desktop-bottom .trash-icon svg rect { fill: var(--text); }
   .desktop-bottom .trash-label {
     font-size: 8px;
     font-weight: 700;
-    color: var(--text-dim);
+    color: var(--apple-blue);
   }
 
   /* ------ RESET BUTTON ------ */
@@ -524,7 +581,7 @@
     cursor: pointer;
     color: var(--text);
   }
-  .reset-area .btn:active { background: var(--highlight); color: var(--inverse-text); }
+  .reset-area .btn:active { background: var(--apple-red); color: var(--inverse-text); }
 
   /* ------ BOOT LINE ------ */
   .boot-line {
@@ -535,7 +592,7 @@
     border-top: 1px solid var(--bg);
     margin-top: 4px;
   }
-  .boot-line span { font-weight: 700; color: var(--text); }
+  .boot-line span { font-weight: 700; color: var(--apple-blue); }
 
   /* ------ RESPONSIVE ------ */
   @media (max-width: 440px) {
@@ -686,22 +743,22 @@
             <div class="dacard">
               <h3>Checklist Diario <span style="font-weight:400;font-size:12px;color:var(--text-dim)" id="chkCount">(0/6)</span></h3>
               <div id="chkList">
-                <div class="chk" data-c="c1"><div class="box"></div><div class="txt"><b>[25m] B1:</b> Ver/Aprender - tutorial o docs. Sin codigo.</div><span class="ctag">DIA</span></div>
-                <div class="chk" data-c="c2"><div class="box"></div><div class="txt"><b>[25m] B2:</b> Escribir codigo en VS Code. Copilot si te atoras.</div><span class="ctag">DIA</span></div>
-                <div class="chk" data-c="c3"><div class="box"></div><div class="txt"><b>[25m] B3:</b> Depurar y modificar. Rompe el codigo a proposito.</div><span class="ctag">DIA</span></div>
-                <div class="chk" data-c="c4"><div class="box"></div><div class="txt"><b>[25m] B4:</b> Documentar y commit. README + git push.</div><span class="ctag">DIA</span></div>
-                <div class="chk" data-c="c5"><div class="box"></div><div class="txt"><b>Fin de dia:</b> Corre? Entiendo cada linea? Commit?</div><span class="ctag">NOCHE</span></div>
-                <div class="chk" data-c="c6"><div class="box"></div><div class="txt"><b>Reflexion:</b> Que aprendi? Que prompt funciono mejor?</div><span class="ctag">NOCHE</span></div>
+                <div class="chk" data-c="c1"><div class="box"></div><div class="txt"><b>[25m] B1:</b> Ver/Aprender - tutorial o docs. Sin codigo.</div><span class="ctag" data-tag="DIA">DIA</span></div>
+                <div class="chk" data-c="c2"><div class="box"></div><div class="txt"><b>[25m] B2:</b> Escribir codigo en VS Code. Copilot si te atoras.</div><span class="ctag" data-tag="DIA">DIA</span></div>
+                <div class="chk" data-c="c3"><div class="box"></div><div class="txt"><b>[25m] B3:</b> Depurar y modificar. Rompe el codigo a proposito.</div><span class="ctag" data-tag="DIA">DIA</span></div>
+                <div class="chk" data-c="c4"><div class="box"></div><div class="txt"><b>[25m] B4:</b> Documentar y commit. README + git push.</div><span class="ctag" data-tag="DIA">DIA</span></div>
+                <div class="chk" data-c="c5"><div class="box"></div><div class="txt"><b>Fin de dia:</b> Corre? Entiendo cada linea? Commit?</div><span class="ctag" data-tag="NOCHE">NOCHE</span></div>
+                <div class="chk" data-c="c6"><div class="box"></div><div class="txt"><b>Reflexion:</b> Que aprendi? Que prompt funciono mejor?</div><span class="ctag" data-tag="NOCHE">NOCHE</span></div>
               </div>
             </div>
             <div class="dacard">
               <h3>Checklist Semanal</h3>
               <div>
-                <div class="chk" data-c="w1"><div class="box"></div><div class="txt">Termine el proyecto de la semana?</div><span class="ctag">DOM</span></div>
-                <div class="chk" data-c="w2"><div class="box"></div><div class="txt">Subi a GitHub con README?</div><span class="ctag">DOM</span></div>
-                <div class="chk" data-c="w3"><div class="box"></div><div class="txt">Escribi que prompts funcionaron mejor?</div><span class="ctag">DOM</span></div>
-                <div class="chk" data-c="w4"><div class="box"></div><div class="txt">Grabe video demo de 30s-2 min?</div><span class="ctag">DOM</span></div>
-                <div class="chk" data-c="w5"><div class="box"></div><div class="txt">Descanse el domingo? (no estudiar)</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w1"><div class="box"></div><div class="txt">Termine el proyecto de la semana?</div><span class="ctag" data-tag="DOM">DOM</span></div>
+                <div class="chk" data-c="w2"><div class="box"></div><div class="txt">Subi a GitHub con README?</div><span class="ctag" data-tag="DOM">DOM</span></div>
+                <div class="chk" data-c="w3"><div class="box"></div><div class="txt">Escribi que prompts funcionaron mejor?</div><span class="ctag" data-tag="DOM">DOM</span></div>
+                <div class="chk" data-c="w4"><div class="box"></div><div class="txt">Grabe video demo de 30s-2 min?</div><span class="ctag" data-tag="DOM">DOM</span></div>
+                <div class="chk" data-c="w5"><div class="box"></div><div class="txt">Descanse el domingo? (no estudiar)</div><span class="ctag" data-tag="DOM">DOM</span></div>
               </div>
             </div>
             <div class="reset-area"><button class="btn" onclick="resetChecks()">REINICIAR CHECKLIST</button></div>
