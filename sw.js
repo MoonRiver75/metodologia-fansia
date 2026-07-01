@@ -1,4 +1,4 @@
-const CACHE = 'fansia-os-v1';
+const CACHE = 'fansia-os-v2';
 const FILES = [
   'index.html',
   'manifest.json'
@@ -21,6 +21,12 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request).catch(() => caches.match(e.request))
+    );
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request))
   );

@@ -32,6 +32,7 @@
     --accent-orange: #CC6600;
     --accent-purple: #660099;
     --scroll-track: #E5E5E5;
+    --zoom: 1;
   }
 
   * {
@@ -87,6 +88,8 @@
     font-size: 13px;
   }
   .menu-bar .menu-item:active { background: var(--menu-hover); color: var(--selection-text); }
+  .menu-bar .zoom-btn { border: 1px solid transparent; }
+  .menu-bar .zoom-btn:hover { border-color: var(--text-dim); }
   .menu-bar .spacer { flex: 1; }
   .menu-bar .clock {
     font-size: 13px;
@@ -107,6 +110,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    zoom: var(--zoom);
   }
 
   /* ------ TITLE BAR (pinstripe Platinum) ------ */
@@ -591,6 +595,8 @@
     <span class="menu-item"><span class="menu-item-text">Edit</span></span>
     <span class="menu-item"><span class="menu-item-text">View</span></span>
     <span class="menu-item"><span class="menu-item-text">Help</span></span>
+    <span class="menu-item zoom-btn" onclick="zoomOut()" title="Acercar" style="cursor:pointer;padding:2px 4px;font-size:13px;font-weight:700;">A+</span>
+    <span class="menu-item zoom-btn" onclick="zoomIn()" title="Alejar" style="cursor:pointer;padding:2px 4px;font-size:13px;font-weight:700;">A-</span>
     <span class="spacer"></span>
     <span class="clock" id="clock">12:00</span>
   </div>
@@ -1067,8 +1073,44 @@ function closeWarning() { alert('System error: Cannot close. Learning in progres
 function zoomWarning() { alert('Zoom not available. Your progress is already maximized.'); }
 function trashClick() { alert('Empty Trash? Your completed tasks are already gone. Keep going!'); }
 
-document.addEventListener('DOMContentLoaded', init);
-if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); }); }
+const ZOOM_LEVELS = [0.75, 0.85, 1, 1.15, 1.3, 1.5];
+function zoomIn() {
+  let z = parseFloat(localStorage.getItem('fansia_zoom')) || 1;
+  let i = ZOOM_LEVELS.indexOf(z);
+  if (i < ZOOM_LEVELS.length - 1) z = ZOOM_LEVELS[i + 1];
+  applyZoom(z);
+}
+function zoomOut() {
+  let z = parseFloat(localStorage.getItem('fansia_zoom')) || 1;
+  let i = ZOOM_LEVELS.indexOf(z);
+  if (i > 0) z = ZOOM_LEVELS[i - 1];
+  applyZoom(z);
+}
+function applyZoom(z) {
+  localStorage.setItem('fansia_zoom', z.toString());
+  document.documentElement.style.setProperty('--zoom', z);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  init();
+  const z = parseFloat(localStorage.getItem('fansia_zoom')) || 1;
+  if (z !== 1) applyZoom(z);
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        newSW.addEventListener('statechange', () => {
+          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+            if (confirm('Nueva version disponible. Recargar?')) location.reload();
+          }
+        });
+      });
+    }).catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
