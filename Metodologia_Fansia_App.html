@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Metodología Fansia — De Cero a Agentes IA en 60 Días</title>
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --card: #1a1a2e;
+    --card2: #16213e;
+    --accent: #00d4aa;
+    --accent2: #7c3aed;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --success: #22c55e;
+    --border: #2a2a4a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header h1 {
+    font-size: 18px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header .sub {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 2px;
+    -webkit-text-fill-color: var(--text2);
+  }
+  /* ===== STATUS BAR ===== */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    font-size: 11px;
+  }
+  .status-bar .label { color: var(--text2); white-space: nowrap; }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .status-bar .pct {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 32px;
+    text-align: right;
+  }
+  .day-display {
+    background: var(--accent2);
+    color: #fff;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-weight: 700;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  /* ===== TABS ===== */
+  .tab-bar {
+    display: flex;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky;
+    top: 116px;
+    z-index: 99;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 1 0 auto;
+    min-width: 70px;
+    padding: 10px 8px;
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn .icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: rgba(0,212,170,0.08);
+  }
+  /* ===== CONTENT ===== */
+  .tab-content { display: none; padding: 14px 16px 90px; }
+  .tab-content.active { display: block; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+  .card h4 {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 10px 0 4px;
+    color: var(--text);
+  }
+  .card p, .card li { font-size: 12px; line-height: 1.6; color: var(--text2); }
+  .card ul { padding-left: 16px; }
+  .card li { margin-bottom: 4px; }
+  .tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: rgba(239,68,68,0.2); color: var(--danger); }
+  .tag-yellow { background: rgba(245,158,11,0.2); color: var(--warning); }
+  .tag-green { background: rgba(34,197,94,0.2); color: var(--success); }
+  .tag-purple { background: rgba(124,58,237,0.2); color: var(--accent2); }
+  .tag-cyan { background: rgba(0,212,170,0.2); color: var(--accent); }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .week-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .week-cell {
+    background: var(--card2);
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .week-cell:active { transform: scale(0.97); }
+  .week-cell .wn { font-size: 11px; font-weight: 700; color: var(--accent); }
+  .week-cell .wt { font-size: 10px; color: var(--text2); margin-top: 2px; }
+  .week-cell .done {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    float: right;
+    margin-top: -16px;
+  }
+  .week-cell .done.checked { border-color: var(--success); background: var(--success); }
+
+  /* Checklist items */
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-box {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+  .check-item.done .check-box {
+    background: var(--success);
+    border-color: var(--success);
+  }
+  .check-item.done .check-box::after {
+    content: "✓";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .check-item .check-text { font-size: 12px; color: var(--text2); line-height: 1.4; }
+  .check-item.done .check-text { color: var(--text2); opacity: 0.5; text-decoration: line-through; }
+
+  /* Video list */
+  .video-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .video-item:last-child { border-bottom: none; }
+  .video-thumb {
+    width: 48px; height: 48px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .video-info { flex: 1; }
+  .video-info .title { font-size: 12px; font-weight: 600; color: var(--text); }
+  .video-info .meta { font-size: 10px; color: var(--text2); margin-top: 2px; }
+  .video-info .desc { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+  /* Prompt box */
+  .prompt-box {
+    background: var(--card2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 12px;
+    margin: 6px 0;
+    font-size: 11px;
+    color: var(--text2);
+    font-style: italic;
+  }
+
+  /* ===== BOTTOM BAR ===== */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    padding: 6px 0 env(safe-area-inset-bottom, 6px);
+    z-index: 200;
+  }
+  .bottom-btn {
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    font-size: 9px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    padding: 4px 12px;
+    transition: color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+  }
+  .bottom-btn .bi { font-size: 18px; }
+  .bottom-btn.active { color: var(--accent); }
+
+  /* misc */
+  .badge {
+    display: inline-block;
+    background: var(--accent2);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 4px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 16px 0 8px;
+    color: var(--text);
+  }
+  .hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+
+  @media (min-width: 600px) {
+    body { max-width: 480px; margin: 0 auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <h1>Metodología Fansia</h1>
+  <div class="sub">De Cero a Agentes IA en 60 Días · Mentor: IA Aplicada + Vibecoding</div>
+  <div class="status-bar">
+    <span class="label">Progreso</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="pct" id="progressPct">0%</span>
+    <span class="day-display" id="dayDisplay">Día 0</span>
+  </div>
+</div>
+
+<!-- ===== TABS ===== -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="roadmap"><span class="icon">🗺️</span>Ruta</button>
+  <button class="tab-btn" data-tab="videos"><span class="icon">🎬</span>Videos</button>
+  <button class="tab-btn" data-tab="recursos"><span class="icon">📦</span>Recursos</button>
+  <button class="tab-btn" data-tab="checklist"><span class="icon">✅</span>Checklist</button>
+  <button class="tab-btn" data-tab="prompts"><span class="icon">⚡</span>Prompts</button>
+  <button class="tab-btn" data-tab="contingencia"><span class="icon">🛡️</span>Contingencia</button>
+</div>
+
+<!-- ===== TAB 1: ROADMAP ===== -->
+<div class="tab-content active" id="tab-roadmap">
+  <div class="card">
+    <h3>🗺️ Roadmap 8 Semanas</h3>
+    <p style="margin-bottom:8px">Toca una semana para ver detalles. Cada domingo marca la semana como completada.</p>
+    <div class="week-grid" id="weekGrid">
+      <div class="week-cell" data-week="0"><div class="wn">Semana 0</div><div class="wt">Preparación · Setup</div><div class="done" id="w0"></div></div>
+      <div class="week-cell" data-week="1"><div class="wn">Semana 1</div><div class="wt">Python Mínimo + Automatización</div><div class="done" id="w1"></div></div>
+      <div class="week-cell" data-week="2"><div class="wn">Semana 2</div><div class="wt">Pandas + APIs + Reportes</div><div class="done" id="w2"></div></div>
+      <div class="week-cell" data-week="3"><div class="wn">Semana 3</div><div class="wt">Embeddings · El corazón de la IA</div><div class="done" id="w3"></div></div>
+      <div class="week-cell" data-week="4"><div class="wn">Semana 4</div><div class="wt">ML · Random Forest · Clasificación</div><div class="done" id="w4"></div></div>
+      <div class="week-cell" data-week="5"><div class="wn">Semana 5</div><div class="wt">LLMs + Prompt Engineering</div><div class="done" id="w5"></div></div>
+      <div class="week-cell" data-week="6"><div class="wn">Semana 6</div><div class="wt">RAG · Chatbots con memoria</div><div class="done" id="w6"></div></div>
+      <div class="week-cell" data-week="7"><div class="wn">Semana 7</div><div class="wt">Agentes autónomos + Multi-agente</div><div class="done" id="w7"></div></div>
+      <div class="week-cell" data-week="8" style="grid-column:span 2"><div class="wn">Semana 8</div><div class="wt">🎯 Proyecto Final · EduAssist · Portfolio</div><div class="done" id="w8"></div></div>
+    </div>
+  </div>
+
+  <div class="card" id="weekDetail">
+    <h3 id="detailTitle">Semana 0 — Preparación</h3>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- ===== TAB 2: VIDEOS ===== -->
+<div class="tab-content" id="tab-videos">
+  <div class="card">
+    <h3>🎬 Biblioteca de Videos por Etapa</h3>
+    <p style="margin-bottom:8px">Prioridad 🔴 #1 · 🟡 #2 · 🟢 #3. No veas >30 min/día. El resto es código.</p>
+  </div>
+
+  <div class="section-title">🔴 Semanas 1-2 · Python</div>
+  <div class="card">
+    <div class="video-item">
+      <div class="video-thumb" style="background:#1e3a5f">🎓</div>
+      <div class="video-info">
+        <div class="title">Harvard CS50's Python <span class="tag tag-red">#1</span></div>
+        <div class="meta">David Malan · 10h total · GRATIS</div>
+        <div class="desc">El mejor curso de Python del mundo. Funciones, loops, excepciones, file I/O.</div>
+        <a href="https://cs50.harvard.edu/python" target="_blank">cs50.harvard.edu/python</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#1e3a1e">🐍</div>
+      <div class="video-info">
+        <div class="title">Corey Schafer Python Tutorials <span class="tag tag-red">#1</span></div>
+        <div class="meta">Corey Schafer · 9h · GRATIS</div>
+        <div class="desc">Explica lento, claro, sin distracciones. El mejor para fundamentos sólidos.</div>
+        <a href="https://youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7" target="_blank">Ver playlist</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#2d1b4e">📺</div>
+      <div class="video-info">
+        <div class="title">freeCodeCamp Python <span class="tag tag-yellow">#2</span></div>
+        <div class="meta">4h · GRATIS</div>
+        <div class="desc">Curso acelerado. Directo al grano. Bueno para repaso rápido.</div>
+        <a href="https://youtu.be/rfscVS0vtbw" target="_blank">Ver video</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🔴 Semanas 3-4 · Machine Learning + Embeddings</div>
+  <div class="card">
+    <div class="video-item">
+      <div class="video-thumb" style="background:#4a1a1a">📊</div>
+      <div class="video-info">
+        <div class="title">StatQuest with Josh Starmer <span class="tag tag-red">#1</span></div>
+        <div class="meta">Josh Starmer · 5-15 min cada video</div>
+        <div class="desc">EL mejor canal para ML visual. Convierte matemáticas en dibujitos. BAM!</div>
+        <a href="https://youtube.com/@statquest" target="_blank">Ver canal</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#1a1a4a">🧠</div>
+      <div class="video-info">
+        <div class="title">3Blue1Brown Neural Networks <span class="tag tag-red">#1</span></div>
+        <div class="meta">Grant Sanderson · 1h total · GRATIS</div>
+        <div class="desc">Visualizaciones que CAMBIAN tu comprensión. Transformers, atención, embeddings.</div>
+        <a href="https://youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi" target="_blank">Ver playlist</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#1a3a2a">🤖</div>
+      <div class="video-info">
+        <div class="title">Harvard CS50 AI <span class="tag tag-red">#1</span></div>
+        <div class="meta">Harvard · 7 semanas · GRATIS</div>
+        <div class="desc">Proyectos prácticos de ML: búsqueda, clasificación, NLP, transformers.</div>
+        <a href="https://cs50.harvard.edu/ai" target="_blank">cs50.harvard.edu/ai</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🟡 Semanas 5-6 · LLMs + LangChain + RAG</div>
+  <div class="card">
+    <div class="video-item">
+      <div class="video-thumb" style="background:#2a1a3a">🔗</div>
+      <div class="video-info">
+        <div class="title">LangChain Tutorials (Web) <span class="tag tag-yellow">#2</span></div>
+        <div class="meta">15 lecciones progresivas</div>
+        <div class="desc">Ruta completa: fundamentos → chains → memoria → agentes → RAG.</div>
+        <a href="https://langchain-tutorials.com/lessons" target="_blank">langchain-tutorials.com</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#1a2a3a">📄</div>
+      <div class="video-info">
+        <div class="title">RAG Tutorial 2026 (DEV.to) <span class="tag tag-yellow">#2</span></div>
+        <div class="meta">Ragavi S · Tutorial escrito + código</div>
+        <div class="desc">LangChain + ChromaDB con PDF real. Paso a paso. Código ejecutable.</div>
+        <a href="https://dev.to/ragavis-techjournali/rag-tutorial-2026-build-ai-chatbot-with-langchain-chromadb-step-by-step-guide-2hi" target="_blank">Leer tutorial</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#1a2a2a">🏢</div>
+      <div class="video-info">
+        <div class="title">IBM Technology <span class="tag tag-green">#3</span></div>
+        <div class="meta">5-10 min cada video</div>
+        <div class="desc">Conceptos IA explicados clarísimo: RAG, fine-tuning, agentes, embeddings.</div>
+        <a href="https://youtube.com/@IBMTechnology" target="_blank">Ver canal</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#2a2a1a">📰</div>
+      <div class="video-info">
+        <div class="title">Two Minute Papers <span class="tag tag-green">#3</span></div>
+        <div class="meta">2 min cada video</div>
+        <div class="desc">Papers de IA explicados en 2 min. Motivación pura.</div>
+        <a href="https://youtube.com/@TwoMinutePapers" target="_blank">Ver canal</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🟡 Semanas 7-8 · Agentes + Proyecto Final</div>
+  <div class="card">
+    <div class="video-item">
+      <div class="video-thumb" style="background:#1a3a1a">⚙️</div>
+      <div class="video-info">
+        <div class="title">Tech With Tim <span class="tag tag-yellow">#2</span></div>
+        <div class="meta">Tim Ruscica · Proyectos ML/IA</div>
+        <div class="desc">Proyectos end-to-end: chatbots, agentes, ML. Buenos para portfolio.</div>
+        <a href="https://youtube.com/@TechWithTim" target="_blank">Ver canal</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#3a2a1a">🚀</div>
+      <div class="video-info">
+        <div class="title">Nicholas Renotte <span class="tag tag-green">#3</span></div>
+        <div class="meta">Proyectos visuales ML/IA</div>
+        <div class="desc">Proyectos que se ven funcionando. Motivacional. TensorFlow, RAG, chatbots.</div>
+        <a href="https://youtube.com/@NicholasRenotte" target="_blank">Ver canal</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#2a1a1a">🇮🇳</div>
+      <div class="video-info">
+        <div class="title">Krish Naik <span class="tag tag-green">#3</span></div>
+        <div class="meta">End-to-end ML + despliegue</div>
+        <div class="desc">Proyectos completos con Flask, Docker, AWS. Bueno para producción.</div>
+        <a href="https://youtube.com/@krishnaik06" target="_blank">Ver canal</a>
+      </div>
+    </div>
+    <div class="video-item">
+      <div class="video-thumb" style="background:#1a2a3a">🎙️</div>
+      <div class="video-info">
+        <div class="title">Lex Fridman Podcast <span class="tag tag-green">#3</span></div>
+        <div class="meta">Entrevistas largas</div>
+        <div class="desc">Para domingos de reflexión. Charlas con líderes de IA. Inspiración.</div>
+        <a href="https://youtube.com/@lexfridman" target="_blank">Ver canal</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 3: RECURSOS ===== -->
+<div class="tab-content" id="tab-recursos">
+  <div class="card">
+    <h3>📦 Stack Tecnológico</h3>
+    <h4>Instalación Obligatoria (Día 0)</h4>
+    <ul>
+      <li><strong>Python 3.12</strong> — <a href="https://python.org" target="_blank">python.org</a></li>
+      <li><strong>VS Code</strong> + extensiones: Python, Pylance, Jupyter, GitHub Copilot</li>
+      <li><strong>Git + GitHub Desktop</strong> — <a href="https://git-scm.com" target="_blank">git-scm.com</a></li>
+      <li><strong>Docker Desktop</strong> — <a href="https://docker.com" target="_blank">docker.com</a></li>
+      <li><strong>Postman</strong> — <a href="https://postman.com" target="_blank">postman.com</a></li>
+    </ul>
+    <h4>Librerías Python (por nivel)</h4>
+    <ul>
+      <li><strong>Nivel 1</strong> (Sem 1-2): pandas, openpyxl, requests</li>
+      <li><strong>Nivel 2</strong> (Sem 3-4): scikit-learn, joblib, flask, matplotlib</li>
+      <li><strong>Nivel 3</strong> (Sem 5-6): langchain, langchain-community, chromadb, openai, sentence-transformers</li>
+      <li><strong>Nivel 4</strong> (Sem 7-8): pypdf, streamlit, python-dotenv, fastapi</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>📚 Cursos Gratis (Harvard)</h3>
+    <ul>
+      <li><a href="https://cs50.harvard.edu/python" target="_blank"><strong>CS50P</strong></a> — Python para programación (10 semanas, ~3-9h/semana)</li>
+      <li><a href="https://cs50.harvard.edu/x" target="_blank"><strong>CS50x</strong></a> — Introducción a CS (11 semanas, la versión 2026 incluye sección de IA)</li>
+      <li><a href="https://cs50.harvard.edu/ai" target="_blank"><strong>CS50 AI</strong></a> — IA con Python (7 semanas, proyectos prácticos)</li>
+    </ul>
+    <p style="margin-top:6px;font-size:11px;color:var(--text2)">Todos son auditables GRATIS en edX. El certificado verificado cuesta (~$50-299) pero NO lo necesitas.</p>
+  </div>
+
+  <div class="card">
+    <h3>📖 Documentación Esencial</h3>
+    <ul>
+      <li><a href="https://docs.python.org/3/tutorial/" target="_blank">Python Official Tutorial</a> — La fuente de verdad</li>
+      <li><a href="https://pandas.pydata.org/docs/" target="_blank">Pandas Docs</a> — Tu referencia diaria Sem 2-8</li>
+      <li><a href="https://scikit-learn.org/stable/user_guide.html" target="_blank">Scikit-learn User Guide</a> — ML sin matemáticas</li>
+      <li><a href="https://python.langchain.com/docs" target="_blank">LangChain Docs</a> — Para RAG y agentes</li>
+      <li><a href="https://docs.streamlit.io" target="_blank">Streamlit Docs</a> — UI en 30 min</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🔑 APIs Gratuitas</h3>
+    <ul>
+      <li><strong>OpenAI API</strong> — $5 de crédito al registrarse. Usa gpt-4o-mini (económico).</li>
+      <li><strong>Alternativa gratis:</strong> Ollama + modelos locales (llama3, mistral). Sin API key.</li>
+      <li><strong>APIs públicas:</strong> OpenWeatherMap, JSONPlaceholder, NumbersAPI</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>📂 Proyectos del Portfolio</h3>
+    <ul>
+      <li><strong>P1</strong> (Sem 1-2): AutoMail — Script que lee Excel y envía correos</li>
+      <li><strong>P2</strong> (Sem 3-4): EduPredict — API Flask que predice reprobación</li>
+      <li><strong>P3</strong> (Sem 5-6): FaqBot — Chatbot con memoria + embeddings</li>
+      <li><strong>P4</strong> (Sem 7-8): EduAssist — 3 agentes (RAG + Predict + Admin) en Streamlit</li>
+    </ul>
+    <p style="margin-top:6px;font-size:11px;color:var(--text2)">Cada proyecto debe tener README.md, Dockerfile, y video demo de 2-3 min.</p>
+  </div>
+</div>
+
+<!-- ===== TAB 4: CHECKLIST ===== -->
+<div class="tab-content" id="tab-checklist">
+  <div class="card">
+    <h3>✅ Checklist Diario (2h = 4 Pomodoros)</h3>
+    <p style="margin-bottom:8px">Marca cada bloque al completarlo. La consistencia le gana a la intensidad.</p>
+    <div id="dailyChecklist">
+      <div class="check-item" data-c="d1">
+        <div class="check-box"></div>
+        <div class="check-text"><strong>🧠 Bloque 1 (25 min)</strong> — Ver/Aprender: Tutorial o docs del tema del día. NO CODE. Solo entender.</div>
+      </div>
+      <div class="check-item" data-c="d2">
+        <div class="check-box"></div>
+        <div class="check-text"><strong>🧑‍💻 Bloque 2 (25 min)</strong> — Escribir código: Abre VS Code. Escribe el código del tutorial de memoria. Usa Copilot si te atoras.</div>
+      </div>
+      <div class="check-item" data-c="d3">
+        <div class="check-box"></div>
+        <div class="check-text"><strong>🔧 Bloque 3 (25 min)</strong> — Depurar y modificar: Cambia algo. Rompe el código a propósito y arréglalo.</div>
+      </div>
+      <div class="check-item" data-c="d4">
+        <div class="check-box"></div>
+        <div class="check-text"><strong>📦 Bloque 4 (25 min)</strong> — Documentar y commit: README + git add + git commit + git push.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 Checklist de Fin de Día</h3>
+    <div id="endDayChecklist">
+      <div class="check-item" data-c="e1">
+        <div class="check-box"></div>
+        <div class="check-text">¿Corre el código sin errores?</div>
+      </div>
+      <div class="check-item" data-c="e2">
+        <div class="check-box"></div>
+        <div class="check-text">¿Entiendo qué hace cada línea? (Si no, le pregunto a ChatGPT)</div>
+      </div>
+      <div class="check-item" data-c="e3">
+        <div class="check-box"></div>
+        <div class="check-text">¿Hice commit a GitHub?</div>
+      </div>
+      <div class="check-item" data-c="e4">
+        <div class="check-box"></div>
+        <div class="check-text">¿Sé explicar lo que aprendí hoy en 3 oraciones?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🗓️ Checklist Semanal (Domingo)</h3>
+    <div id="weekChecklist">
+      <div class="check-item" data-c="w1">
+        <div class="check-box"></div>
+        <div class="check-text">¿Terminé el proyecto de la semana?</div>
+      </div>
+      <div class="check-item" data-c="w2">
+        <div class="check-box"></div>
+        <div class="check-text">¿Subí a GitHub con README?</div>
+      </div>
+      <div class="check-item" data-c="w3">
+        <div class="check-box"></div>
+        <div class="check-text">¿Escribí en mi diario qué prompts funcionaron mejor?</div>
+      </div>
+      <div class="check-item" data-c="w4">
+        <div class="check-box"></div>
+        <div class="check-text">¿Grabé video demo de 30 seg - 2 min?</div>
+      </div>
+      <div class="check-item" data-c="w5">
+        <div class="check-box"></div>
+        <div class="check-text">¿Descansé el domingo? (NO estudiar — el cerebro aprende mientras descansa)</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button onclick="resetAllChecks()" style="flex:1;background:var(--card);border:1px solid var(--danger);color:var(--danger);padding:8px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer">Reiniciar Checklist</button>
+    <button onclick="saveAllChecks()" style="flex:1;background:var(--accent);border:none;color:#000;padding:8px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">Guardar Progreso</button>
+  </div>
+</div>
+
+<!-- ===== TAB 5: PROMPTS ===== -->
+<div class="tab-content" id="tab-prompts">
+  <div class="card">
+    <h3>⚡ Diccionario del Vibecoder</h3>
+    <p style="margin-bottom:8px">10 prompts universales que te sacan de cualquier apuro. Tenlos siempre a mano.</p>
+  </div>
+
+  <div class="card">
+    <h3>1. Generar código base</h3>
+    <div class="prompt-box">"Eres un desarrollador senior experto en [Python/Pandas/LangChain]. Genera un script que [descripción precisa]. Incluye: 1) logging, 2) manejo de errores con try/except específicos, 3) type hints, 4) comentarios en cada bloque explicando QUÉ hace y POR QUÉ. El script debe ser ejecutable tal cual."</div>
+  </div>
+
+  <div class="card">
+    <h3>2. Depurar error</h3>
+    <div class="prompt-box">"Este es mi código [pegarlo] y este el error [pegarlo]. Dame 3 posibles causas ordenadas por probabilidad. Para cada causa: 1) por qué ocurre, 2) cómo verificarlo, 3) código corregido. Si la causa 1 no funciona, ¿qué más puede ser?"</div>
+  </div>
+
+  <div class="card">
+    <h3>3. Explicar código</h3>
+    <div class="prompt-box">"Explica este código [pegarlo] como si tuviera 15 años y está aprendiendo a programar. No uses jerga técnica sin explicarla. Para cada bloque, dime: 1) qué hace, 2) por qué es necesario, 3) qué pasaría si lo quitamos. Termina con un resumen de 3 oraciones."</div>
+  </div>
+
+  <div class="card">
+    <h3>4. Refactorizar</h3>
+    <div class="prompt-box">"Refactoriza este código [pegarlo]. Hazlo más legible, modular y mantenible. Separa en funciones, añade type hints, sigue PEP8. No cambies la funcionalidad. Dame el código completo refactorizado más una lista de qué cambiaste y por qué."</div>
+  </div>
+
+  <div class="card">
+    <h3>5. Añadir feature</h3>
+    <div class="prompt-box">"A este código [pegarlo] quiero añadirle: [feature]. No reescribas todo el código, solo muéstrame los cambios necesarios: 1) qué líneas añadir, 2) dónde, 3) qué import añadir. Explica por qué tu solución funciona."</div>
+  </div>
+
+  <div class="card">
+    <h3>6. Mejorar prompts</h3>
+    <div class="prompt-box">"Eres un experto en prompt engineering. Ayúdame a mejorar este prompt: [mi prompt]. Hazlo más específico, ponle restricciones, formato de salida esperado y ejemplos few-shot. Dame 3 versiones mejoradas con explicación de cada mejora."</div>
+  </div>
+
+  <div class="card">
+    <h3>7. Escribir tests</h3>
+    <div class="prompt-box">"Genera tests unitarios con pytest para este código [pegarlo]. Cubre: 1) caso normal, 2) caso borde (empty, None, valores extremos), 3) caso de error esperado. Los tests deben ser ejecutables con 'pytest test_*.py'. Usa assert."</div>
+  </div>
+
+  <div class="card">
+    <h3>8. Comparar librerías</h3>
+    <div class="prompt-box">"Compara [librería A] vs [librería B] para: [tarea]. Dame: 1) pros/cons en lenguaje de calle, 2) cuándo usar cada una, 3) ejemplo mínimo funcional de cada una para la misma tarea, 4) mi recomendación."</div>
+  </div>
+
+  <div class="card">
+    <h3>9. Convertir código entre frameworks</h3>
+    <div class="prompt-box">"Convierte este código [pegarlo] de [librería A] a [librería B]. Mantén exactamente la misma funcionalidad. Explica las diferencias clave de paradigma entre ambos."</div>
+  </div>
+
+  <div class="card">
+    <h3>10. Revisión de seguridad</h3>
+    <div class="prompt-box">"Revisa este código [pegarlo] en busca de: 1) vulnerabilidades de seguridad (inyección, exposición de API keys, path traversal), 2) malas prácticas, 3) problemas de performance. Para cada hallazgo: riesgo (Alto/Medio/Bajo) y cómo arreglarlo."</div>
+  </div>
+</div>
+
+<!-- ===== TAB 6: CONTINGENCIA ===== -->
+<div class="tab-content" id="tab-contingencia">
+  <div class="card">
+    <h3>🛡️ Plan de Contingencia</h3>
+    <p style="margin-bottom:6px">3 atajos para cuando te estanques. No pierdas tiempo.</p>
+  </div>
+
+  <div class="card">
+    <h3>⚡ Atajo 1: "Si no entiendes ML, sáltate la teoría"</h3>
+    <ul>
+      <li>No entiendes qué es un árbol de decisión? → No importa.</li>
+      <li>Solo memoriza el pipeline: <code>import → split → fit → predict → score</code></li>
+      <li>Random Forest funciona sin tuning. No toques hiperparámetros aún.</li>
+      <li><strong>Problema:</strong> Accuracy baja → solución: agrega más datos, no cambies el modelo.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>⚡ Atajo 2: "Si un error te para por +30 min, copia y pega"</h3>
+    <ul>
+      <li>Copia el error completo en ChatGPT o Claude: <em>"Explica este error de Python como si tuviera 12 años y dame el código corregido"</em></li>
+      <li>Si usas Copilot en VS Code, selecciona el error y presiona <strong>Ctrl+I → "Fix this"</strong></li>
+      <li><strong>Regla de oro:</strong> No pierdas más de 30 min en un error. Pídele a la IA que lo resuelva.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>⚡ Atajo 3: "Si LangChain te abruma, hazlo sin LangChain"</h3>
+    <ul>
+      <li>Puedes hacer RAG con 20 líneas de Python puro usando <code>openai.Embedding.create()</code> + <code>numpy</code> para similitud coseno.</li>
+      <li>LangChain es comodidad, no necesidad. Si no entiendes una clase, hazlo manual.</li>
+      <li><strong>Fórmula mágica:</strong> <code>similitud = np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2))</code></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>📉 Plan B si te atrasas</h3>
+    <ul>
+      <li><strong>Semana 1-2 atrasada?</strong> → Elimina el proyecto de API, ve directo a ML</li>
+      <li><strong>Semana 5-6 atrasada?</strong> → Salta ChromaDB, usa FAISS (más fácil)</li>
+      <li><strong>Nunca</strong> te saltes el proyecto final. Si llegas justo, haz el proyecto final aunque sea solo el RAG sin Streamlit.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🔄 Flujo de Depuración Asistida (15 min)</h3>
+    <ul>
+      <li><strong>0-5 min:</strong> Intentas resolverlo tú (lees el error, buscas el typo)</li>
+      <li><strong>5-10 min:</strong> Le pides a la IA: "Este es el error [pegarlo], dime 3 posibles causas y cómo solucionarlas"</li>
+      <li><strong>10-15 min:</strong> Ataque nuclear: "Reescribe esta función desde cero usando un enfoque más simple. Evita [librería compleja], usa solo [librería simple]"</li>
+      <li><strong>Si a los 15 min no funciona:</strong> Borra todo y empieza de nuevo con un prompt diferente.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🧠 Preguntas de Validación (responder cada noche)</h3>
+    <div id="valQuestions">
+      <div class="check-item" data-c="v1">
+        <div class="check-box"></div>
+        <div class="check-text">Si cambio <code>=</code> por <code>==</code>, ¿qué pasa y por qué?</div>
+      </div>
+      <div class="check-item" data-c="v2">
+        <div class="check-box"></div>
+        <div class="check-text">¿Qué hace <code>with open(...) as f:</code> que no haga <code>f = open(...)</code>?</div>
+      </div>
+      <div class="check-item" data-c="v3">
+        <div class="check-box"></div>
+        <div class="check-text">¿Puedo explicarle este código a un compañero sin que la IA lo haga por mí?</div>
+      </div>
+      <div class="check-item" data-c="v4">
+        <div class="check-box"></div>
+        <div class="check-text">¿Qué pasaría si cambio el modelo de embeddings?</div>
+      </div>
+      <div class="check-item" data-c="v5">
+        <div class="check-box"></div>
+        <div class="check-text">¿Qué aprendí del error de hoy? (escribir en errores.md)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BOTTOM BAR ===== -->
+<div class="bottom-bar">
+  <button class="bottom-btn active" data-tab="roadmap"><span class="bi">🗺️</span>Ruta</button>
+  <button class="bottom-btn" data-tab="videos"><span class="bi">🎬</span>Videos</button>
+  <button class="bottom-btn" data-tab="recursos"><span class="bi">📦</span>Recursos</button>
+  <button class="bottom-btn" data-tab="checklist"><span class="bi">✅</span>Checklist</button>
+  <button class="bottom-btn" data-tab="prompts"><span class="bi">⚡</span>Prompts</button>
+  <button class="bottom-btn" data-tab="contingencia"><span class="bi">🛡️</span>Plan B</button>
+</div>
+
+<script>
+// ===== DATA =====
+const WEEKS = [
+  {
+    title: "Semana 0 — Preparación (Día 0)",
+    body: `<h4>🎯 Objetivo</h4><p>Entorno listo. Sin escribir código.</p>
+    <h4>📥 Instalar</h4><ul><li>Python 3.12</li><li>VS Code + extensiones (Python, Pylance, Jupyter, GitHub Copilot)</li><li>Git + GitHub Desktop</li><li>Docker Desktop</li><li>Postman</li></ul>
+    <h4>📝 Crear cuentas</h4><ul><li>GitHub</li><li>ChatGPT / Claude</li><li>OpenAI API (obtener API key)</li></ul>
+    <h4>⏱️ Tiempo: 2h · Un solo bloque</h4>
+    <h4>🎬 Videos recomendados</h4><ul><li>Corey Schafer: Install Python (10 min)</li><li>freeCodeCamp: Setup VS Code (5 min)</li></ul>`
+  },
+  {
+    title: "Semana 1 — Python Mínimo + Automatización",
+    body: `<h4>🎯 Objetivo</h4><p>Escribir scripts Python que lean archivos y envíen correos.</p>
+    <h4>📚 Temas</h4><ul><li>Python express: variables, listas, dicts, condicionales, loops, funciones</li><li>openpyxl + smtplib</li><li>Git: init, add, commit, push</li></ul>
+    <h4>💻 Proyecto: MailMasivoExcel</h4><p>Script que lee Excel con [Nombre, Email, Curso, Nota] y envía correo personalizado.</p>
+    <h4>⏱️ 2h/día (1h tutorial + 1h código)</h4>
+    <h4>🎬 Videos</h4><ul><li>Corey Schafer Python 1-6 (playlist)</li><li>Harvard CS50P Week 0-1</li></ul>` 
+  },
+  {
+    title: "Semana 2 — Pandas + APIs",
+    body: `<h4>🎯 Objetivo</h4><p>Consumir APIs y generar reportes Excel.</p>
+    <h4>📚 Temas</h4><ul><li>Pandas: read_csv, groupby, to_excel</li><li>Requests + APIs REST</li><li>Archivos CSV/JSON/Excel</li></ul>
+    <h4>💻 Proyecto: ReporteadorAutomático</h4><p>Descarga datos de API (clima), procesa con Pandas, genera Excel con promedio/máx/mín.</p>
+    <h4>⏱️ 2h/día</h4>
+    <h4>🎬 Videos</h4><ul><li>Corey Schafer Pandas playlist</li><li>freeCodeCamp Pandas (2h)</li></ul>`
+  },
+  {
+    title: "Semana 3 — Embeddings · El corazón de la IA",
+    body: `<h4>🎯 Objetivo</h4><p>Entender vectores, similaridad semántica y construir un buscador manual.</p>
+    <h4>📚 Temas</h4><ul><li>Embeddings: texto → vectores</li><li>Similaridad del coseno</li><li>Sentence-Transformers + numpy</li></ul>
+    <h4>💻 Proyecto: FAQ Semántico</h4><p>Chatbot de terminal que busca FAQ por similaridad semántica. Sin LangChain, solo numpy.</p>
+    <h4>⏱️ 2.5h/día</h4>
+    <h4>🎬 Videos</h4><ul><li>3Blue1Brown Neural Networks (1h)</li><li>StatQuest: Embeddings</li><li>Harvard CS50 AI Week 4</li></ul>`
+  },
+  {
+    title: "Semana 4 — ML · Random Forest",
+    body: `<h4>🎯 Objetivo</h4><p>Entrenar modelo predictivo y desplegarlo como API.</p>
+    <h4>📚 Temas</h4><ul><li>Scikit-learn pipeline: split → fit → predict → score</li><li>Random Forest Classifier</li><li>Flask API + joblib</li></ul>
+    <h4>💻 Proyecto: EduPredict API</h4><p>API Flask que recibe datos de alumno y devuelve probabilidad de reprobar. Dockerizada.</p>
+    <h4>⏱️ 2.5h/día</h4>
+    <h4>🎬 Videos</h4><ul><li>StatQuest: Random Forest (9 min)</li><li>StatQuest: Overfitting (6 min)</li><li>Tech With Tim ML playlist</li></ul>`
+  },
+  {
+    title: "Semana 5 — LLMs + Prompt Engineering",
+    body: `<h4>🎯 Objetivo</h4><p>Construir chatbots con memoria y tools usando APIs de LLM.</p>
+    <h4>📚 Temas</h4><ul><li>OpenAI API: ChatCompletion, system prompt, temperatura</li><li>LangChain: ChatPromptTemplate, LLMChain</li><li>Memoria conversacional + Tool calling</li></ul>
+    <h4>💻 Proyecto: ChatbotAtencionCliente</h4><p>Chatbot con memoria que responde FAQs y usa tools (clima, calculadora).</p>
+    <h4>⏱️ 2h/día</h4>
+    <h4>🎬 Videos</h4><ul><li>LangChain Tutorials (lecciones 1-6)</li><li>IBM Technology: RAG vs Fine-tuning</li><li>3Blue1Brown: Transformers (27 min)</li></ul>`
+  },
+  {
+    title: "Semana 6 — RAG · Chatbots con Memoria",
+    body: `<h4>🎯 Objetivo</h4><p>Agente que lea PDFs y responda preguntas usando RAG.</p>
+    <h4>📚 Temas</h4><ul><li>PyPDFLoader + TextSplitter</li><li>ChromaDB + embeddings</li><li>RetrievalQA chain</li></ul>
+    <h4>💻 Proyecto: RAG-ManualEscolar</h4><p>Carga manual escolar PDF, responde preguntas basado en el contenido. Con memoria.</p>
+    <h4>⏱️ 2.5h/día</h4>
+    <h4>🎬 Videos</h4><ul><li>RAG Tutorial 2026 (DEV.to)</li><li>LangChain Tutorials (lecciones 7-15)</li><li>freeCodeCamp LangChain course</li></ul>`
+  },
+  {
+    title: "Semana 7 — Agentes Autónomos + Multi-agente",
+    body: `<h4>🎯 Objetivo</h4><p>Sistema con múltiples agentes que colaboran y un router de intenciones.</p>
+    <h4>📚 Temas</h4><ul><li>Agentes con loop de razonamiento</li><li>Router de intenciones (embeddings)</li><li>Memoria persistente (SQLite)</li></ul>
+    <h4>💻 Proyecto: Sistema Multi-agente</h4><p>Router + RAG Agent + Predict Agent + Admin Agent. Evaluación automática.</p>
+    <h4>⏱️ 2.5h/día</h4>
+    <h4>🎬 Videos</h4><ul><li>Tech With Tim: AI Agents</li><li>Nicholas Renotte: Agent projects</li><li>Nana Janashia: Agentic AI</li></ul>`
+  },
+  {
+    title: "Semana 8 — 🎯 Proyecto Final: EduAssist",
+    body: `<h4>🎯 Objetivo</h4><p>Asistente Educativo Inteligente funcional, dockerizado, con UI y portfolio.</p>
+    <h4>📚 Temas</h4><ul><li>Streamlit UI</li><li>Integración multi-agente</li><li>Docker + docker-compose</li><li>README profesional</li></ul>
+    <h4>💻 Proyecto: EduAssist</h4><p>3 agentes en 1: RAG + Predictivo + Administrativo. UI Streamlit. Docker. GitHub.</p>
+    <h4>⏱️ 3h/día (último día: grabar video demo 3 min)</h4>
+    <h4>🎬 Videos</h4><ul><li>Krish Naik: End-to-end deployment</li><li>Tech With Tim: Streamlit tutorial</li></ul>`
+  }
+];
+
+// ===== WEEK DETAILS =====
+function renderWeek(idx) {
+  const w = WEEKS[idx];
+  if (!w) return;
+  document.getElementById('detailTitle').textContent = w.title;
+  document.getElementById('detailBody').innerHTML = w.body;
+}
+
+document.querySelectorAll('.week-cell').forEach(el => {
+  el.addEventListener('click', () => {
+    const idx = parseInt(el.dataset.week);
+    renderWeek(idx);
+    // check/uncheck
+    const dot = el.querySelector('.done');
+    const isChecked = dot.classList.contains('checked');
+    if (!isChecked) {
+      dot.classList.add('checked');
+      el.style.opacity = '0.7';
+    } else {
+      dot.classList.remove('checked');
+      el.style.opacity = '1';
+    }
+    updateProgress();
+  });
+});
+renderWeek(0);
+
+// ===== TABS =====
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bottom-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  document.querySelector('.tab-btn[data-tab="' + tabId + '"]').classList.add('active');
+  document.querySelector('.bottom-btn[data-tab="' + tabId + '"]').classList.add('active');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+document.querySelectorAll('.bottom-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// ===== CHECKLIST =====
+function loadChecks() {
+  const saved = localStorage.getItem('fansia_checks');
+  if (saved) {
+    const data = JSON.parse(saved);
+    data.forEach(id => {
+      const el = document.querySelector(`[data-c="${id}"]`);
+      if (el) el.classList.add('done');
+    });
+  }
+}
+
+document.querySelectorAll('.check-item').forEach(el => {
+  el.addEventListener('click', () => {
+    el.classList.toggle('done');
+    saveAllChecks();
+  });
+});
+
+function saveAllChecks() {
+  const done = [];
+  document.querySelectorAll('.check-item.done').forEach(el => {
+    done.push(el.dataset.c);
+  });
+  localStorage.setItem('fansia_checks', JSON.stringify(done));
+  updateProgress();
+}
+
+function resetAllChecks() {
+  if (!confirm('¿Reiniciar todo el checklist?')) return;
+  document.querySelectorAll('.check-item').forEach(el => el.classList.remove('done'));
+  document.querySelectorAll('.week-cell .done').forEach(el => el.classList.remove('checked'));
+  localStorage.removeItem('fansia_checks');
+  localStorage.removeItem('fansia_weeks');
+  updateProgress();
+}
+
+// ===== WEEK PERSISTENCE =====
+function saveWeeks() {
+  const done = [];
+  document.querySelectorAll('.week-cell .done.checked').forEach(el => {
+    done.push(el.id);
+  });
+  localStorage.setItem('fansia_weeks', JSON.stringify(done));
+}
+
+function loadWeeks() {
+  const saved = localStorage.getItem('fansia_weeks');
+  if (saved) {
+    const data = JSON.parse(saved);
+    data.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('checked');
+        el.closest('.week-cell').style.opacity = '0.7';
+      }
+    });
+  }
+}
+
+// override week click to also save
+const origWeekClick = document.querySelectorAll('.week-cell');
+origWeekClick.forEach(el => {
+  el.addEventListener('click', () => {
+    setTimeout(saveWeeks, 50);
+    updateProgress();
+  });
+});
+
+// ===== PROGRESS =====
+function updateProgress() {
+  const totalChecks = document.querySelectorAll('.check-item').length;
+  const doneChecks = document.querySelectorAll('.check-item.done').length;
+  const totalWeeks = document.querySelectorAll('.week-cell').length;
+  const doneWeeks = document.querySelectorAll('.week-cell .done.checked').length;
+
+  const weekScore = (doneWeeks / totalWeeks) * 50;
+  const checkScore = (doneChecks / totalChecks) * 50;
+  const pct = Math.round(weekScore + checkScore);
+
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  // day display based on weeks done
+  const day = Math.min(doneWeeks * 7 + 1, 60);
+  document.getElementById('dayDisplay').textContent = 'Día ' + (pct > 0 ? Math.max(1, Math.round(pct * 0.6)) : 0);
+
+  saveAllChecks();
+  saveWeeks();
+}
+
+// ===== SESSION: LAST TAB =====
+function saveTab() {
+  const active = document.querySelector('.tab-content.active');
+  if (active) localStorage.setItem('fansia_tab', active.id.replace('tab-', ''));
+}
+document.querySelectorAll('.tab-btn').forEach(b => {
+  b.addEventListener('click', saveTab);
+});
+document.querySelectorAll('.bottom-btn').forEach(b => {
+  b.addEventListener('click', saveTab);
+});
+
+function loadTab() {
+  const saved = localStorage.getItem('fansia_tab');
+  if (saved && document.getElementById('tab-' + saved)) switchTab(saved);
+}
+
+// ===== INIT =====
+loadChecks();
+loadWeeks();
+updateProgress();
+loadTab();
+
+// ===== DAY COUNTER =====
+(function() {
+  const start = localStorage.getItem('fansia_start');
+  if (!start) {
+    localStorage.setItem('fansia_start', Date.now().toString());
+  } else {
+    const days = Math.floor((Date.now() - parseInt(start)) / 86400000);
+    document.getElementById('dayDisplay').textContent = 'Día ' + Math.min(days, 60);
+  }
+})();
+
+console.log('🚀 Metodología Fansia cargada. ¡A darle!');
+</script>
+</body>
+</html>

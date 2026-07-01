@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Fansia OS">
+<title>Fansia OS v1.0</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  :root {
+    --bg: #ffffff;
+    --screen-bg: #e8e8e8;
+    --border: #000000;
+    --text: #000000;
+    --text-dim: #555555;
+    --accent: #000000;
+    --highlight-bg: #dddddd;
+    --shadow: #999999;
+    --pixel: 'Press Start 2P', monospace;
+    --chicago: 'Courier New', 'Courier', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--chicago);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ===== MAC SHELL ===== */
+  .mac-shell {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    background: var(--screen-bg);
+    border: 4px solid var(--border);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== TOP BAR ===== */
+  .menu-bar {
+    background: var(--bg);
+    border-bottom: 3px solid var(--border);
+    padding: 6px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--chicago);
+  }
+  .menu-bar .apple { font-size: 16px; letter-spacing: 2px; }
+  .menu-bar .clock { font-size: 10px; }
+
+  /* ===== WELCOME BANNER ===== */
+  .welcome-banner {
+    background: var(--bg);
+    border-bottom: 3px solid var(--border);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .profile-icon {
+    width: 48px; height: 48px;
+    border: 3px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: 0.1s;
+  }
+  .profile-icon:active { background: var(--highlight-bg); }
+  .profile-icon.selecting { background: var(--highlight-bg); }
+
+  .welcome-text { flex: 1; overflow: hidden; }
+  .welcome-text .greeting { font-size: 12px; font-weight: 700; font-family: var(--chicago); }
+  .welcome-text .name { font-size: 16px; font-weight: 700; font-family: var(--chicago); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .welcome-text .name-input {
+    font-size: 16px; font-weight: 700; font-family: var(--chicago);
+    border: 2px dashed var(--border);
+    background: var(--bg);
+    padding: 2px 6px;
+    width: 100%;
+    outline: none;
+    color: var(--text);
+  }
+
+  /* ===== ICON PICKER ===== */
+  .icon-picker {
+    display: none;
+    background: var(--bg);
+    border: 3px solid var(--border);
+    padding: 10px;
+    margin: 8px 14px;
+    gap: 8px;
+    justify-content: center;
+  }
+  .icon-picker.open { display: flex; }
+  .icon-picker .icon-opt {
+    width: 40px; height: 40px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    background: var(--bg);
+    image-rendering: pixelated;
+  }
+  .icon-picker .icon-opt:active { background: var(--highlight-bg); }
+  .icon-picker .icon-opt.selected { background: var(--highlight-bg); border-width: 3px; }
+
+  /* ===== STATUS BAR ===== */
+  .status-bar-classic {
+    border-bottom: 3px solid var(--border);
+    padding: 8px 14px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-family: var(--chicago);
+  }
+  .status-row .label { font-weight: 700; }
+  .status-row .value { font-weight: 400; }
+
+  .progress-bar-classic {
+    height: 14px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-bar-classic .fill {
+    height: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--border) 0px,
+      var(--border) 3px,
+      var(--bg) 3px,
+      var(--bg) 6px
+    );
+    transition: width 0.5s;
+    width: 0%;
+  }
+  .progress-bar-classic .overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 700;
+    font-family: var(--chicago);
+    color: var(--text);
+  }
+
+  /* ===== CALENDAR ===== */
+  .calendar-section {
+    border-bottom: 3px solid var(--border);
+    padding: 10px 14px;
+    background: var(--bg);
+  }
+  .calendar-section .title {
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--chicago);
+    margin-bottom: 8px;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+  .cal-header {
+    text-align: center;
+    font-size: 7px;
+    font-weight: 700;
+    font-family: var(--chicago);
+    padding: 4px 0;
+    border-bottom: 2px solid var(--border);
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-family: var(--chicago);
+    border: 1px solid var(--shadow);
+    background: var(--bg);
+    cursor: default;
+    position: relative;
+  }
+  .cal-day.past { background: var(--highlight-bg); border-color: var(--border); opacity: 0.6; }
+  .cal-day.today { border: 3px solid var(--border); font-weight: 700; }
+  .cal-day.future { border-color: var(--shadow); }
+  .cal-day.remaining { background: var(--bg); border-color: var(--border); font-weight: 700; }
+  .cal-day.remaining::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px; height: 4px;
+    background: var(--border);
+  }
+  .cal-empty { border: none; background: transparent; }
+
+  .calendar-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 9px;
+    font-family: var(--chicago);
+    padding: 4px 0;
+  }
+  .calendar-info .stat { display: flex; align-items: center; gap: 4px; }
+  .calendar-info .stat .dot {
+    width: 8px; height: 8px;
+    border: 1px solid var(--border);
+    display: inline-block;
+  }
+  .calendar-info .stat .dot.filled { background: var(--border); }
+
+  /* ===== CHECKLIST ===== */
+  .checklist-section {
+    border-bottom: 3px solid var(--border);
+    padding: 10px 14px;
+    background: var(--bg);
+    flex: 1;
+  }
+  .checklist-section .title {
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--chicago);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .checklist-section .title .count {
+    font-size: 9px;
+    font-weight: 400;
+  }
+
+  .classic-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    border-bottom: 1px dashed var(--shadow);
+    cursor: pointer;
+  }
+  .classic-check:last-child { border-bottom: none; }
+  .classic-check .box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.1s;
+  }
+  .classic-check.done .box { background: var(--border); }
+  .classic-check.done .box::after { content: 'X'; color: var(--bg); font-size: 12px; }
+  .classic-check .text { font-size: 10px; font-family: var(--chicago); line-height: 1.3; flex: 1; }
+  .classic-check.done .text { text-decoration: line-through; opacity: 0.5; }
+
+  /* ===== DIARY SECTION ===== */
+  .diary-section {
+    border-bottom: 3px solid var(--border);
+    padding: 10px 14px;
+    background: var(--bg);
+  }
+  .diary-section .title {
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--chicago);
+    margin-bottom: 6px;
+  }
+  .diary-entry {
+    border: 2px solid var(--border);
+    background: var(--bg);
+    padding: 8px;
+    min-height: 60px;
+    font-size: 10px;
+    font-family: var(--chicago);
+    resize: vertical;
+    width: 100%;
+    outline: none;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .diary-entry:focus { background: var(--highlight-bg); }
+  .diary-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+    font-size: 8px;
+    font-family: var(--chicago);
+  }
+  .diary-footer .btn {
+    border: 2px solid var(--border);
+    background: var(--bg);
+    padding: 4px 10px;
+    font-size: 8px;
+    font-family: var(--chicago);
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text);
+  }
+  .diary-footer .btn:active { background: var(--highlight-bg); }
+  .diary-footer .saved-flag { color: var(--text-dim); }
+
+  /* ===== BOTTOM ===== */
+  .bottom-bar-classic {
+    background: var(--bg);
+    border-top: 3px solid var(--border);
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8px;
+    font-family: var(--chicago);
+    margin-top: auto;
+    position: sticky;
+    bottom: 0;
+  }
+  .bottom-bar-classic .app-name { font-weight: 700; }
+  .bottom-bar-classic .version { color: var(--text-dim); }
+  .bottom-bar-classic .reset-btn {
+    border: 2px solid var(--border);
+    background: var(--bg);
+    padding: 4px 8px;
+    font-size: 7px;
+    font-family: var(--chicago);
+    cursor: pointer;
+    color: var(--text);
+    font-weight: 700;
+  }
+  .bottom-bar-classic .reset-btn:active { background: var(--highlight-bg); }
+
+  /* ===== PIXEL DECORATIONS ===== */
+  .pixel-border {
+    position: relative;
+  }
+  .pixel-border::before {
+    content: '';
+    position: absolute;
+    top: -3px; left: -3px; right: -3px; bottom: -3px;
+    border: 2px solid var(--border);
+    pointer-events: none;
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (min-width: 421px) {
+    .mac-shell { border-width: 8px; }
+  }
+  @media (max-width: 420px) {
+    .mac-shell { border-width: 3px; }
+    .welcome-text .name,
+    .welcome-text .name-input { font-size: 14px; }
+    .profile-icon { width: 40px; height: 40px; font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="mac-shell" id="app">
+
+  <!-- MENU BAR -->
+  <div class="menu-bar">
+    <span class="apple">&#x2630;</span>
+    <span>File  Edit  View  Special</span>
+    <span class="clock" id="clock">12:00</span>
+  </div>
+
+  <!-- WELCOME -->
+  <div class="welcome-banner">
+    <div class="profile-icon" id="profileIcon" onclick="toggleIconPicker()">&#9733;</div>
+    <div class="welcome-text">
+      <div class="greeting" id="greetingText">Bienvenido,</div>
+      <input class="name-input" id="nameInput" type="text" placeholder="tu nombre..." maxlength="20" value="">
+    </div>
+  </div>
+
+  <!-- ICON PICKER -->
+  <div class="icon-picker" id="iconPicker">
+    <div class="icon-opt selected" data-icon="&#9733;" onclick="pickIcon(this)">&#9733;</div>
+    <div class="icon-opt" data-icon="&#9790;" onclick="pickIcon(this)">&#9790;</div>
+    <div class="icon-opt" data-icon="&#9824;" onclick="pickIcon(this)">&#9824;</div>
+    <div class="icon-opt" data-icon="&#9827;" onclick="pickIcon(this)">&#9827;</div>
+    <div class="icon-opt" data-icon="&#9830;" onclick="pickIcon(this)">&#9830;</div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar-classic">
+    <div class="status-row">
+      <span class="label">Progreso General</span>
+      <span class="value" id="progressText">0%</span>
+    </div>
+    <div class="progress-bar-classic">
+      <div class="fill" id="progressFill"></div>
+      <div class="overlay" id="progressOverlay">0 / 60</div>
+    </div>
+    <div class="status-row">
+      <span class="label">Semana Actual</span>
+      <span class="value" id="currentWeekText">Semana 0 · Preparacion</span>
+    </div>
+    <div class="status-row">
+      <span class="label">Proyectos Completados</span>
+      <span class="value" id="projectsDone">0 / 4</span>
+    </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="calendar-section">
+    <div class="title">
+      <span>&#x2630; Calendario de Progreso</span>
+      <span id="daysRemainingText">60 dias restantes</span>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+    <div class="calendar-info">
+      <span class="stat"><span class="dot filled"></span> Completado</span>
+      <span class="stat"><span class="dot"></span> Pendiente</span>
+      <span class="stat" id="calendarStats">0 / 60</span>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="checklist-section">
+    <div class="title">
+      <span>&#x2611; Checklist Diario</span>
+      <span class="count" id="checkCount">0 / 4</span>
+    </div>
+    <div id="checklistContainer">
+      <div class="classic-check" data-cid="c1">
+        <div class="box"></div>
+        <div class="text"><b>[25m] Bloque 1:</b> Ver/Aprender — Tutorial o docs. NO CODE.</div>
+      </div>
+      <div class="classic-check" data-cid="c2">
+        <div class="box"></div>
+        <div class="text"><b>[25m] Bloque 2:</b> Escribir código en VS Code. Usa Copilot si te atoras.</div>
+      </div>
+      <div class="classic-check" data-cid="c3">
+        <div class="box"></div>
+        <div class="text"><b>[25m] Bloque 3:</b> Depurar y modificar. Rompe el codigo a proposito.</div>
+      </div>
+      <div class="classic-check" data-cid="c4">
+        <div class="box"></div>
+        <div class="text"><b>[25m] Bloque 4:</b> Documentar y commit. README + git push.</div>
+      </div>
+      <div class="classic-check" data-cid="c5">
+        <div class="box"></div>
+        <div class="text"><b>Fin de dia:</b> ¿Corre el codigo? ¿Entiendo cada linea? ¿Hice commit?</div>
+      </div>
+      <div class="classic-check" data-cid="c6">
+        <div class="box"></div>
+        <div class="text"><b>Reflexion:</b> ¿Que aprendi hoy? ¿Que prompt funciono mejor?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIARY -->
+  <div class="diary-section">
+    <div class="title">&#x2704; Que aprendi hoy</div>
+    <textarea class="diary-entry" id="diaryEntry" placeholder="Escribe que aprendiste hoy...&#10;Ej: 'Entendi como funcionan los embeddings. El prompt que use fue...'"></textarea>
+    <div class="diary-footer">
+      <button class="btn" onclick="saveDiary()">&#x25A0;Guardar</button>
+      <span class="saved-flag" id="diarySaved">No guardado</span>
+      <button class="btn" onclick="clearDiary()">Borrar</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar-classic">
+    <span class="app-name">Fansia OS v1.0</span>
+    <span class="version">1984-2026</span>
+    <button class="reset-btn" onclick="resetAll()">Reiniciar</button>
+  </div>
+
+</div>
+
+<script>
+// ===== STATE =====
+const TOTAL_DAYS = 60;
+const ICONS = ['★', '☽', '♠', '♣', '♦'];
+
+// ===== INIT =====
+function init() {
+  // Name
+  const savedName = localStorage.getItem('fansia_name');
+  if (savedName) document.getElementById('nameInput').value = savedName;
+  document.getElementById('nameInput').addEventListener('input', function() {
+    localStorage.setItem('fansia_name', this.value);
+    updateGreeting();
+  });
+
+  // Icon
+  const savedIcon = localStorage.getItem('fansia_icon');
+  if (savedIcon) {
+    document.getElementById('profileIcon').innerHTML = savedIcon;
+    document.querySelectorAll('.icon-opt').forEach(el => {
+      el.classList.toggle('selected', el.dataset.icon === savedIcon);
+    });
+  }
+
+  // Diary
+  const savedDiary = localStorage.getItem('fansia_diary');
+  if (savedDiary) document.getElementById('diaryEntry').value = savedDiary;
+
+  // Checks
+  const savedChecks = localStorage.getItem('fansia_classic_checks');
+  if (savedChecks) {
+    const data = JSON.parse(savedChecks);
+    data.forEach(id => {
+      const el = document.querySelector(`[data-cid="${id}"]`);
+      if (el) el.classList.add('done');
+    });
+  }
+
+  // Click handlers for checks
+  document.querySelectorAll('.classic-check').forEach(el => {
+    el.addEventListener('click', () => {
+      el.classList.toggle('done');
+      saveChecks();
+      updateAll();
+    });
+  });
+
+  updateClock();
+  setInterval(updateClock, 60000);
+  buildCalendar();
+  updateAll();
+  updateGreeting();
+}
+
+// ===== GREETING =====
+function updateGreeting() {
+  const name = document.getElementById('nameInput').value.trim();
+  const greeting = document.getElementById('greetingText');
+  if (name) greeting.textContent = 'Bienvenido,';
+  else greeting.textContent = 'Bienvenido, viajer@';
+}
+
+// ===== ICON PICKER =====
+function toggleIconPicker() {
+  const picker = document.getElementById('iconPicker');
+  picker.classList.toggle('open');
+}
+
+function pickIcon(el) {
+  document.querySelectorAll('.icon-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  const icon = el.dataset.icon;
+  document.getElementById('profileIcon').innerHTML = icon;
+  localStorage.setItem('fansia_icon', icon);
+  setTimeout(() => document.getElementById('iconPicker').classList.remove('open'), 200);
+}
+
+// ===== CLOCK =====
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2, '0');
+  const m = now.getMinutes().toString().padStart(2, '0');
+  document.getElementById('clock').textContent = h + ':' + m;
+}
+
+// ===== CALENDAR =====
+function buildCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const startDate = localStorage.getItem('fansia_start_date')
+    ? new Date(parseInt(localStorage.getItem('fansia_start_date')))
+    : new Date();
+
+  if (!localStorage.getItem('fansia_start_date')) {
+    localStorage.setItem('fansia_start_date', startDate.getTime().toString());
+  }
+
+  const today = new Date();
+  const daysElapsed = Math.floor((today - startDate) / 86400000);
+  const daysLeft = Math.max(0, TOTAL_DAYS - daysElapsed);
+
+  grid.innerHTML = '';
+
+  // headers
+  const headers = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+  headers.forEach(h => {
+    const div = document.createElement('div');
+    div.className = 'cal-header';
+    div.textContent = h;
+    grid.appendChild(div);
+  });
+
+  // first day offset
+  const firstDay = startDate.getDay(); // 0=Sun
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'cal-empty';
+    grid.appendChild(empty);
+  }
+
+  // days
+  for (let d = 0; d < TOTAL_DAYS; d++) {
+    const cellDate = new Date(startDate);
+    cellDate.setDate(startDate.getDate() + d);
+
+    const div = document.createElement('div');
+    div.className = 'cal-day';
+    div.textContent = d + 1;
+
+    const diff = Math.floor((cellDate - today) / 86400000);
+
+    if (diff < 0) div.classList.add('past');
+    else if (diff === 0) div.classList.add('today');
+    else div.classList.add('future');
+
+    if (diff >= 0 && diff <= daysLeft) div.classList.add('remaining');
+
+    grid.appendChild(div);
+  }
+
+  document.getElementById('daysRemainingText').textContent = daysLeft + ' dias restantes';
+  document.getElementById('calendarStats').textContent = daysElapsed + ' / ' + TOTAL_DAYS;
+  localStorage.setItem('fansia_days_elapsed', daysElapsed.toString());
+}
+
+// ===== CHECKS =====
+function saveChecks() {
+  const done = [];
+  document.querySelectorAll('.classic-check.done').forEach(el => {
+    done.push(el.dataset.cid);
+  });
+  localStorage.setItem('fansia_classic_checks', JSON.stringify(done));
+}
+
+// ===== DIARY =====
+function saveDiary() {
+  const text = document.getElementById('diaryEntry').value;
+  localStorage.setItem('fansia_diary', text);
+  const flag = document.getElementById('diarySaved');
+  flag.textContent = 'Guardado ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  setTimeout(() => { flag.textContent = 'Guardado'; }, 3000);
+}
+
+function clearDiary() {
+  if (!confirm('Borrar entrada de hoy?')) return;
+  document.getElementById('diaryEntry').value = '';
+  localStorage.removeItem('fansia_diary');
+  document.getElementById('diarySaved').textContent = 'Borrado';
+}
+
+// ===== UPDATE ALL =====
+function updateAll() {
+  // Check count
+  const total = document.querySelectorAll('.classic-check').length;
+  const done = document.querySelectorAll('.classic-check.done').length;
+  document.getElementById('checkCount').textContent = done + ' / ' + total;
+
+  // Progress
+  const daysElapsed = parseInt(localStorage.getItem('fansia_days_elapsed') || '0');
+  const checkPct = total > 0 ? (done / total) * 50 : 0;
+  const dayPct = Math.min(daysElapsed / TOTAL_DAYS * 50, 50);
+  const totalPct = Math.round(checkPct + dayPct);
+
+  document.getElementById('progressFill').style.width = totalPct + '%';
+  document.getElementById('progressText').textContent = totalPct + '%';
+  document.getElementById('progressOverlay').textContent = daysElapsed + ' / ' + TOTAL_DAYS;
+
+  // Week
+  const weekNum = Math.min(Math.floor(daysElapsed / 7) + 1, 9);
+  const weekNames = ['0', '1', '2', '3', '4', '5', '6', '7', '8'];
+  const weekTitles = ['Preparacion', 'Python + Auto', 'Pandas + APIs', 'Embeddings', 'ML + RF', 'LLMs + Prompt', 'RAG', 'Agentes', 'Proyecto Final'];
+  const wi = Math.min(weekNum, 8);
+  document.getElementById('currentWeekText').textContent = 'Semana ' + weekNames[wi] + ' · ' + weekTitles[wi];
+
+  // Projects
+  const weekChecks = document.querySelectorAll('.week-cell .done.checked');
+  const projCount = localStorage.getItem('fansia_projects_count') || '0';
+  document.getElementById('projectsDone').textContent = projCount + ' / 4';
+}
+
+// ===== RESET =====
+function resetAll() {
+  if (!confirm('Reiniciar todo el progreso? Se borraran todos los datos.')) return;
+  localStorage.removeItem('fansia_classic_checks');
+  localStorage.removeItem('fansia_diary');
+  localStorage.removeItem('fansia_start_date');
+  localStorage.removeItem('fansia_days_elapsed');
+  localStorage.removeItem('fansia_name');
+  localStorage.removeItem('fansia_icon');
+  localStorage.removeItem('fansia_projects_count');
+
+  document.querySelectorAll('.classic-check').forEach(el => el.classList.remove('done'));
+  document.getElementById('diaryEntry').value = '';
+  document.getElementById('nameInput').value = '';
+  document.getElementById('profileIcon').innerHTML = '★';
+  document.querySelectorAll('.icon-opt').forEach(el => el.classList.remove('selected'));
+  document.querySelector('.icon-opt').classList.add('selected');
+  document.getElementById('diarySaved').textContent = 'No guardado';
+  document.getElementById('greetingText').textContent = 'Bienvenido, viajer@';
+
+  const now = new Date();
+  localStorage.setItem('fansia_start_date', now.getTime().toString());
+  buildCalendar();
+  updateAll();
+}
+
+// ===== PROJECT COUNTER (for external use) =====
+function setProjectCount(n) {
+  localStorage.setItem('fansia_projects_count', n.toString());
+  updateAll();
+}
+
+// ===== BOOT =====
+document.addEventListener('DOMContentLoaded', init);
+
+// ===== PWA Service Worker =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      console.log('SW registrado');
+    }).catch(err => {
+      console.log('SW error (no critical):', err);
+    });
+  });
+}
+</script>
+</body>
+</html>

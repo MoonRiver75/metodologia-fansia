@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fansia OS">
+<title>Fansia OS — Vintage Mac</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  :root {
+    --desktop: #808080;
+    --menu-bg: #ffffff;
+    --menu-border: #000000;
+    --window-bg: #ffffff;
+    --window-title: repeating-linear-gradient(90deg, #000 0px, #000 2px, #fff 2px, #fff 4px);
+    --text: #000000;
+    --dim: #444444;
+    --highlight: #dddddd;
+    --shadow: #666666;
+    --pixel: 'Press Start 2P', monospace;
+    --sys: 'Courier New', 'Courier', monospace;
+  }
+
+  /* ------ DESKTOP PATTERN ------ */
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--desktop);
+    background-image:
+      radial-gradient(circle, #999 1px, transparent 1px);
+    background-size: 8px 8px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: var(--sys);
+    color: var(--text);
+    overflow-x: hidden;
+    padding-top: 44px;
+    position: relative;
+  }
+
+  /* ------ CURSOR (classic Mac pointer) ------ */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 16px; height: 18px;
+    background: var(--text);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 85%, 20% 50%);
+    z-index: 999999;
+    pointer-events: none;
+    display: none;
+  }
+
+  /* ------ MENUBAR ------ */
+  .menu-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 44px;
+    background: var(--menu-bg);
+    border-bottom: 2px solid var(--menu-border);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    z-index: 1000;
+    font-size: 13px;
+    font-family: var(--sys);
+    font-weight: 700;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.5);
+  }
+  .menu-bar .apple {
+    font-size: 18px;
+    margin-right: 16px;
+    padding: 8px 6px;
+    cursor: default;
+  }
+  .menu-bar .menu-item {
+    padding: 8px 10px;
+    cursor: default;
+    letter-spacing: -0.5px;
+    user-select: none;
+  }
+  .menu-bar .menu-item:active { background: var(--highlight); }
+  .menu-bar .spacer { flex: 1; }
+  .menu-bar .clock {
+    font-size: 12px;
+    font-weight: 400;
+    padding: 8px 6px;
+    letter-spacing: 0.5px;
+    cursor: default;
+    user-select: none;
+  }
+
+  /* ------ MAIN WINDOW ------ */
+  .window {
+    width: 100%;
+    max-width: 440px;
+    margin: 8px 10px 20px;
+    background: var(--window-bg);
+    border: 2px solid var(--menu-border);
+    border-radius: 0;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ------ TITLE BAR ------ */
+  .title-bar {
+    background: var(--window-title);
+    height: 20px;
+    border-bottom: 2px solid var(--menu-border);
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    position: relative;
+    user-select: none;
+  }
+  .title-bar .close-box {
+    width: 14px; height: 14px;
+    border: 2px solid var(--menu-border);
+    background: var(--window-bg);
+    margin-right: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .title-bar .close-box:active { background: var(--highlight); }
+  .title-bar .close-box::after { content: ''; }
+  .title-bar .title-text {
+    flex: 1;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--sys);
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text);
+    text-shadow: 0 0 0 var(--text);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .title-bar .zoom-box {
+    width: 14px; height: 14px;
+    border: 2px solid var(--menu-border);
+    background: var(--window-bg);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .title-bar .zoom-box:active { background: var(--highlight); }
+  .title-bar .zoom-box::after { content: ''; display: block; width: 6px; height: 6px; background: var(--text); }
+
+  /* ------ SCROLLBAR AREA ------ */
+  .window-body {
+    padding: 10px 12px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+  }
+  .window-body::-webkit-scrollbar { width: 14px; }
+  .window-body::-webkit-scrollbar-track {
+    background: var(--window-bg);
+    border-left: 2px solid var(--menu-border);
+  }
+  .window-body::-webkit-scrollbar-thumb {
+    background: var(--highlight);
+    border: 2px solid var(--menu-border);
+    border-right: none;
+  }
+
+  /* ------ WINDOW CONTENT DIVIDERS ------ */
+  .scrollable-content { min-height: 100px; }
+
+  /* ------ PROFILE BAR (inside window) ------ */
+  .profile-section {
+    border: 2px solid var(--menu-border);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--window-bg);
+  }
+  .profile-icon {
+    width: 40px; height: 40px;
+    border: 2px solid var(--menu-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: var(--window-bg);
+  }
+  .profile-icon:active { background: var(--highlight); }
+  .profile-text { flex: 1; overflow: hidden; }
+  .profile-text .greet { font-size: 9px; font-family: var(--sys); color: var(--dim); }
+  .profile-text .pname {
+    font-size: 14px; font-weight: 700; font-family: var(--sys);
+    border: none; background: transparent; width: 100%; outline: none;
+    color: var(--text); padding: 2px 0;
+    border-bottom: 2px dashed var(--dim);
+  }
+  .icon-strip {
+    display: none;
+    border: 2px solid var(--menu-border);
+    padding: 6px 10px;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 10px;
+    background: var(--window-bg);
+  }
+  .icon-strip.open { display: flex; }
+  .icon-strip .iopt {
+    width: 32px; height: 32px;
+    border: 2px solid var(--menu-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    background: var(--window-bg);
+  }
+  .icon-strip .iopt:active { background: var(--highlight); }
+  .icon-strip .iopt.sel { background: var(--highlight); border-width: 3px; }
+
+  /* ------ STATUS (desk accessory style) ------ */
+  .status-box {
+    border: 2px solid var(--menu-border);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    background: var(--window-bg);
+  }
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    font-family: var(--sys);
+    margin-top: 3px;
+  }
+  .status-row .lbl { font-weight: 700; }
+  .pbar {
+    height: 16px;
+    border: 2px solid var(--menu-border);
+    background: var(--window-bg);
+    position: relative;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .pbar .fill {
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #000 0px, #000 3px, #fff 3px, #fff 6px, #000 6px, #000 9px, #fff 9px, #fff 12px);
+    transition: width 0.5s;
+    width: 0%;
+  }
+  .pbar .ov {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7px; font-weight: 700; font-family: var(--sys);
+  }
+
+  /* ------ DESK ACCESSORY TABS ------ */
+  .da-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 10px;
+  }
+  .da-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--menu-border);
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: var(--window-bg);
+  }
+  .da-tabs::-webkit-scrollbar { display: none; }
+  .da-btn {
+    flex: 1 0 auto;
+    min-width: 64px;
+    padding: 6px 4px;
+    background: var(--window-bg);
+    border: none;
+    border-top: 2px solid transparent;
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent;
+    font-size: 7px;
+    font-weight: 700;
+    font-family: var(--sys);
+    cursor: pointer;
+    color: var(--dim);
+    text-align: center;
+    transition: 0.1s;
+    position: relative;
+    top: 2px;
+  }
+  .da-btn .da-icon { font-size: 14px; display: block; margin-bottom: 1px; }
+  .da-btn.act {
+    border-color: var(--menu-border);
+    border-bottom-color: var(--window-bg);
+    color: var(--text);
+    background: var(--window-bg);
+    z-index: 1;
+  }
+
+  .da-content { display: none; padding: 0; }
+  .da-content.act { display: block; }
+
+  /* ------ CARDS (desk accessory content) ------ */
+  .dacard {
+    border: 2px solid var(--menu-border);
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    background: var(--window-bg);
+  }
+  .dacard h3 {
+    font-size: 10px; font-weight: 700;
+    font-family: var(--sys); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 5px;
+  }
+  .dacard h4 { font-size: 9px; font-weight: 700; margin: 6px 0 3px; font-family: var(--sys); }
+  .dacard p, .dacard li { font-size: 8px; line-height: 1.5; font-family: var(--sys); color: var(--dim); }
+  .dacard ul { padding-left: 12px; }
+  .dacard li { margin-bottom: 2px; }
+  .dacard a { color: var(--text); }
+  .dacard .prompt-box {
+    background: var(--highlight);
+    border-left: 3px solid var(--menu-border);
+    padding: 6px 8px;
+    margin: 4px 0;
+    font-size: 8px;
+    font-style: italic;
+    font-family: var(--sys);
+    color: var(--text);
+    word-break: break-word;
+  }
+  .dacard .tag {
+    font-size: 6px; font-weight: 700;
+    border: 1px solid var(--menu-border);
+    padding: 0 4px;
+    margin-right: 2px;
+  }
+  .dacard .prio {
+    display: inline-block;
+    font-size: 6px; font-weight: 700;
+    border: 1px solid var(--menu-border);
+    padding: 0 4px;
+    margin-left: 3px;
+  }
+
+  /* ------ WEEK GRID ------ */
+  .wgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+  .wcell {
+    border: 2px solid var(--menu-border);
+    padding: 6px;
+    cursor: pointer;
+    transition: 0.1s;
+    position: relative;
+    background: var(--window-bg);
+  }
+  .wcell:active { background: var(--highlight); }
+  .wcell .wn { font-size: 7px; font-weight: 700; font-family: var(--sys); }
+  .wcell .wt { font-size: 6px; color: var(--dim); font-family: var(--sys); margin-top: 1px; }
+  .wcell .wdot {
+    position: absolute; top: 4px; right: 4px;
+    width: 12px; height: 12px;
+    border: 2px solid var(--menu-border);
+    background: var(--window-bg);
+  }
+  .wcell .wdot.chk { background: var(--menu-border); }
+  .wcell .wdot.chk::after { content: 'X'; display: flex; align-items: center; justify-content: center; color: var(--window-bg); font-size: 7px; font-weight: 700; }
+  .wcell.done { opacity: 0.55; }
+
+  /* ------ CHECKLIST ------ */
+  .chk {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--highlight);
+    cursor: pointer;
+  }
+  .chk:last-child { border-bottom: none; }
+  .chk .box {
+    width: 14px; height: 14px;
+    border: 2px solid var(--menu-border);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    background: var(--window-bg);
+  }
+  .chk.done .box { background: var(--menu-border); }
+  .chk.done .box::after { content: 'X'; color: var(--window-bg); font-size: 8px; }
+  .chk .txt { font-size: 8px; font-family: var(--sys); line-height: 1.3; flex: 1; }
+  .chk.done .txt { text-decoration: line-through; opacity: 0.4; }
+  .chk .ctag { font-size: 6px; border: 1px solid var(--menu-border); padding: 0 4px; white-space: nowrap; }
+
+  /* ------ CALENDAR ------ */
+  .calgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .calh { text-align: center; font-size: 6px; font-weight: 700; font-family: var(--sys); padding: 2px 0; border-bottom: 2px solid var(--menu-border); }
+  .cald {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 6px; font-family: var(--sys);
+    border: 1px solid var(--highlight);
+    background: var(--window-bg);
+  }
+  .cald.pst { background: var(--highlight); opacity: 0.4; }
+  .cald.tdy { border: 3px solid var(--menu-border); font-weight: 700; }
+  .cald.rem { border-color: var(--menu-border); }
+  .cald.emp { border: none; background: transparent; }
+  .calinfo { display: flex; justify-content: space-between; margin-top: 4px; font-size: 7px; font-family: var(--sys); }
+
+  /* ------ DIARY ------ */
+  .dentry {
+    border: 2px solid var(--menu-border);
+    background: var(--window-bg);
+    padding: 6px;
+    min-height: 44px;
+    font-size: 8px;
+    font-family: var(--sys);
+    resize: vertical;
+    width: 100%;
+    outline: none;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .dentry:focus { background: #f8f8f8; }
+  .dfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 7px; font-family: var(--sys); }
+  .dfoot .btn {
+    border: 2px solid var(--menu-border);
+    background: var(--window-bg);
+    padding: 3px 8px;
+    font-size: 7px;
+    font-family: var(--sys);
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text);
+  }
+  .dfoot .btn:active { background: var(--highlight); }
+
+  /* ------ VIDEO ITEM ------ */
+  .vitem { display: flex; gap: 6px; padding: 5px 0; border-bottom: 1px dashed var(--highlight); }
+  .vitem:last-child { border-bottom: none; }
+  .vthumb { width: 30px; height: 30px; border: 2px solid var(--menu-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; background: var(--window-bg); }
+  .vinfo { flex: 1; }
+  .vinfo .vt { font-size: 8px; font-weight: 700; font-family: var(--sys); }
+  .vinfo .vm { font-size: 6px; color: var(--dim); font-family: var(--sys); margin-top: 1px; }
+  .vinfo .vd { font-size: 7px; color: var(--dim); font-family: var(--sys); margin-top: 1px; }
+
+  .stitle { font-size: 9px; font-weight: 700; font-family: var(--sys); margin: 8px 0 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ------ BOTTOM BAR (trash area) ------ */
+  .desktop-bottom {
+    position: fixed;
+    bottom: 8px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    z-index: 500;
+    opacity: 0.6;
+  }
+  .desktop-bottom .trash-icon {
+    width: 28px; height: 32px;
+    border: 2px solid var(--menu-border);
+    background: var(--window-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .desktop-bottom .trash-icon:active { background: var(--highlight); }
+  .desktop-bottom .trash-label {
+    font-size: 6px;
+    font-family: var(--sys);
+    color: var(--window-bg);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  }
+
+  /* ------ RESET BUTTON ------ */
+  .reset-area {
+    display: flex; gap: 6px; margin-top: 6px;
+  }
+  .reset-area .btn {
+    flex: 1; text-align: center;
+    border: 2px solid var(--menu-border);
+    background: var(--window-bg);
+    padding: 5px;
+    font-size: 7px;
+    font-family: var(--sys);
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text);
+  }
+  .reset-area .btn:active { background: var(--highlight); }
+
+  /* ------ BOOT CHIME LINE ------ */
+  .boot-line {
+    font-size: 6px;
+    font-family: var(--sys);
+    color: var(--dim);
+    text-align: center;
+    padding: 4px 0;
+    border-top: 1px dashed var(--highlight);
+    margin-top: 4px;
+  }
+  .boot-line span { font-weight: 700; color: var(--text); }
+
+  /* ------ RESPONSIVE ------ */
+  @media (max-width: 440px) {
+    .window { margin: 4px 6px 20px; }
+    .menu-bar { font-size: 11px; }
+    .menu-bar .menu-item { padding: 8px 5px; }
+  }
+  @media (max-width: 360px) {
+    .menu-item-text { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== MENUBAR ===== -->
+  <div class="menu-bar">
+    <span class="apple"></span>
+    <span class="menu-item"><span class="menu-item-text">File</span></span>
+    <span class="menu-item"><span class="menu-item-text">Edit</span></span>
+    <span class="menu-item"><span class="menu-item-text">View</span></span>
+    <span class="menu-item"><span class="menu-item-text">Special</span></span>
+    <span class="spacer"></span>
+    <span class="clock" id="clock">12:00</span>
+  </div>
+
+  <!-- ===== MAIN WINDOW ===== -->
+  <div class="window">
+
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+      <div class="close-box" onclick="closeWarning()"></div>
+      <div class="title-text" id="windowTitle">Fansia OS</div>
+      <div class="zoom-box" onclick="zoomWarning()"></div>
+    </div>
+
+    <!-- WINDOW BODY -->
+    <div class="window-body">
+      <div class="scrollable-content" id="appContent">
+
+        <!-- PROFILE -->
+        <div class="profile-section">
+          <div class="profile-icon" id="picon" onclick="toggleIcons()">★</div>
+          <div class="profile-text">
+            <div class="greet" id="greeting">Bienvenido, viajer@</div>
+            <input class="pname" id="pname" placeholder="tu nombre..." maxlength="20">
+          </div>
+        </div>
+
+        <!-- ICON STRIP -->
+        <div class="icon-strip" id="iconStrip">
+          <div class="iopt sel" data-i="★">★</div>
+          <div class="iopt" data-i="☽">☽</div>
+          <div class="iopt" data-i="♠">♠</div>
+          <div class="iopt" data-i="♣">♣</div>
+          <div class="iopt" data-i="♦">♦</div>
+        </div>
+
+        <!-- STATUS -->
+        <div class="status-box">
+          <div class="status-row"><span class="lbl">Progreso General</span><span id="pctText">0%</span></div>
+          <div class="pbar"><div class="fill" id="pfill"></div><div class="ov" id="pov">Día 0 de 60</div></div>
+          <div class="status-row"><span id="weekLabel">Semana 0 · Preparación</span><span id="dayLabel">◆ 0 días</span></div>
+        </div>
+
+        <!-- DESK ACCESSORY TABS -->
+        <div class="da-container">
+
+          <div class="da-tabs">
+            <button class="da-btn act" data-da="ruta"><span class="da-icon">◊</span>RUTA</button>
+            <button class="da-btn" data-da="check"><span class="da-icon">✓</span>CHECK</button>
+            <button class="da-btn" data-da="cal"><span class="da-icon">◈</span>CAL</button>
+            <button class="da-btn" data-da="diario"><span class="da-icon">□</span>DIARIO</button>
+            <button class="da-btn" data-da="videos"><span class="da-icon">▶</span>VIDEOS</button>
+            <button class="da-btn" data-da="recursos"><span class="da-icon">■</span>REC</button>
+            <button class="da-btn" data-da="prompts"><span class="da-icon">⚡</span>PROM</button>
+            <button class="da-btn" data-da="planb"><span class="da-icon">▲</span>PLAN B</button>
+          </div>
+
+          <!-- ===== DA: RUTA ===== -->
+          <div class="da-content act" id="da-ruta">
+            <div class="dacard">
+              <h3>◊ Roadmap 8 Semanas</h3>
+              <p style="margin-bottom:4px">Toca cada semana para marcar/ver detalles.</p>
+              <div class="wgrid" id="wgrid">
+                <div class="wcell" data-w="0"><div class="wn">SEM 0</div><div class="wt">Preparación</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="1"><div class="wn">SEM 1</div><div class="wt">Python + Auto</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="2"><div class="wn">SEM 2</div><div class="wt">Pandas + APIs</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="3"><div class="wn">SEM 3</div><div class="wt">Embeddings</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="4"><div class="wn">SEM 4</div><div class="wt">ML + Random Forest</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="5"><div class="wn">SEM 5</div><div class="wt">LLMs + Prompts</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="6"><div class="wn">SEM 6</div><div class="wt">RAG + Chatbots</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="7"><div class="wn">SEM 7</div><div class="wt">Agentes</div><div class="wdot"></div></div>
+                <div class="wcell" data-w="8" style="grid-column:span 2"><div class="wn">SEM 8 · PROYECTO FINAL</div><div class="wt">EduAssist: 3 agentes en 1</div><div class="wdot"></div></div>
+              </div>
+            </div>
+            <div class="dacard" id="detailCard">
+              <h3 id="dtitle">Semana 0 — Preparación</h3>
+              <div id="dbody"><h4>Objetivo</h4><p>Entorno listo. Sin escribir código.</p><h4>Instalar</h4><ul><li>Python 3.12</li><li>VS Code + extensiones</li><li>Git + GitHub Desktop</li><li>Docker Desktop</li><li>Postman</li></ul><h4>Cuentas</h4><ul><li>GitHub · ChatGPT · OpenAI API</li></ul></div>
+            </div>
+          </div>
+
+          <!-- ===== DA: CHECK ===== -->
+          <div class="da-content" id="da-check">
+            <div class="dacard">
+              <h3>✓ Checklist Diario <span style="font-weight:400;font-size:7px" id="chkCount">(0/6)</span></h3>
+              <div id="chkList">
+                <div class="chk" data-c="c1"><div class="box"></div><div class="txt"><b>[25m] B1:</b> Ver/Aprender — tutorial o docs. Sin código.</div><span class="ctag">DÍA</span></div>
+                <div class="chk" data-c="c2"><div class="box"></div><div class="txt"><b>[25m] B2:</b> Escribir código en VS Code. Copilot si te atoras.</div><span class="ctag">DÍA</span></div>
+                <div class="chk" data-c="c3"><div class="box"></div><div class="txt"><b>[25m] B3:</b> Depurar y modificar. Rompe el código a propósito.</div><span class="ctag">DÍA</span></div>
+                <div class="chk" data-c="c4"><div class="box"></div><div class="txt"><b>[25m] B4:</b> Documentar y commit. README + git push.</div><span class="ctag">DÍA</span></div>
+                <div class="chk" data-c="c5"><div class="box"></div><div class="txt"><b>Fin de día:</b> ¿Corre? ¿Entiendo cada línea? ¿Commit?</div><span class="ctag">NOCHE</span></div>
+                <div class="chk" data-c="c6"><div class="box"></div><div class="txt"><b>Reflexión:</b> ¿Qué aprendí? ¿Qué prompt funcionó mejor?</div><span class="ctag">NOCHE</span></div>
+              </div>
+            </div>
+            <div class="dacard">
+              <h3>✓ Checklist Semanal</h3>
+              <div>
+                <div class="chk" data-c="w1"><div class="box"></div><div class="txt">Terminé el proyecto de la semana?</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w2"><div class="box"></div><div class="txt">Subí a GitHub con README?</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w3"><div class="box"></div><div class="txt">Escribí qué prompts funcionaron mejor?</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w4"><div class="box"></div><div class="txt">Grabé video demo de 30s-2 min?</div><span class="ctag">DOM</span></div>
+                <div class="chk" data-c="w5"><div class="box"></div><div class="txt">Descansé el domingo? (no estudiar)</div><span class="ctag">DOM</span></div>
+              </div>
+            </div>
+            <div class="reset-area"><button class="btn" onclick="resetChecks()">REINICIAR CHECKLIST</button></div>
+          </div>
+
+          <!-- ===== DA: CAL ===== -->
+          <div class="da-content" id="da-cal">
+            <div class="dacard">
+              <h3>◈ Calendario de Progreso</h3>
+              <p style="margin-bottom:4px"><span id="calStatus">60 días restantes</span></p>
+              <div class="calgrid" id="calgrid"></div>
+              <div class="calinfo"><span>■ Completado</span><span>□ Pendiente</span><span id="calCount">0 / 60</span></div>
+            </div>
+            <div class="dacard">
+              <h3>◈ Estadísticas</h3>
+              <p>Días transcurridos: <span id="statDays">0</span> · Restantes: <span id="statLeft">60</span></p>
+              <p>Semana actual: <span id="statWeek">0</span> · Checklist: <span id="statCheck">0/6</span> · Proyectos: <span id="statProj">0/4</span></p>
+            </div>
+          </div>
+
+          <!-- ===== DA: DIARIO ===== -->
+          <div class="da-content" id="da-diario">
+            <div class="dacard">
+              <h3>□ Qué aprendí hoy</h3>
+              <textarea class="dentry" id="diary" placeholder="Ej: 'Entendí cómo funcionan los embeddings. Usé el prompt...'"></textarea>
+              <div class="dfoot">
+                <button class="btn" onclick="saveDiary()">GUARDAR</button>
+                <span id="diaryStatus">—</span>
+                <button class="btn" onclick="clearDiary()">BORRAR</button>
+              </div>
+            </div>
+            <div class="dacard">
+              <h3>□ Preguntas de Validación</h3>
+              <div class="chk" data-c="v1"><div class="box"></div><div class="txt">Si cambio <code>=</code> por <code>==</code>, ¿qué pasa?</div></div>
+              <div class="chk" data-c="v2"><div class="box"></div><div class="txt">¿Qué hace <code>with open(...)</code> vs <code>open()</code>?</div></div>
+              <div class="chk" data-c="v3"><div class="box"></div><div class="txt">¿Puedo explicar el código sin que la IA lo haga?</div></div>
+              <div class="chk" data-c="v4"><div class="box"></div><div class="txt">¿Qué pasa si cambio el modelo de embeddings?</div></div>
+              <div class="chk" data-c="v5"><div class="box"></div><div class="txt">¿Qué aprendí del error de hoy? (registrar en diario)</div></div>
+            </div>
+          </div>
+
+          <!-- ===== DA: VIDEOS ===== -->
+          <div class="da-content" id="da-videos">
+            <div class="dacard">
+              <h3>▶ Biblioteca de Videos</h3>
+              <p>Prioridad: <span class="prio">#1</span> Imperdible · <span class="prio">#2</span> Recomendado · <span class="prio">#3</span> Si tienes tiempo</p>
+            </div>
+            <div class="stitle">Sem 1-2: Python</div>
+            <div class="dacard">
+              <div class="vitem"><div class="vthumb">H</div><div class="vinfo"><div class="vt">Harvard CS50 Python <span class="prio">#1</span></div><div class="vm">David Malan · 10h gratis</div><div class="vd">El mejor curso de Python. Funciones, loops, file I/O.</div></div></div>
+              <div class="vitem"><div class="vthumb">C</div><div class="vinfo"><div class="vt">Corey Schafer <span class="prio">#1</span></div><div class="vm">9h gratis YouTube</div><div class="vd">Explica lento y claro. Fundamentos sólidos.</div></div></div>
+              <div class="vitem"><div class="vthumb">F</div><div class="vinfo"><div class="vt">freeCodeCamp Python <span class="prio">#2</span></div><div class="vm">4h gratis</div><div class="vd">Curso acelerado. Directo al grano.</div></div></div>
+            </div>
+            <div class="stitle">Sem 3-4: ML + Embeddings</div>
+            <div class="dacard">
+              <div class="vitem"><div class="vthumb">S</div><div class="vinfo"><div class="vt">StatQuest <span class="prio">#1</span></div><div class="vm">Josh Starmer · 5-15 min</div><div class="vd">ML visual. Convierte mates en dibujitos. BAM!</div></div></div>
+              <div class="vitem"><div class="vthumb">B</div><div class="vinfo"><div class="vt">3Blue1Brown Neural Nets <span class="prio">#1</span></div><div class="vm">Grant Sanderson · 1h</div><div class="vd">Visualizaciones que cambian tu comprensión.</div></div></div>
+              <div class="vitem"><div class="vthumb">H</div><div class="vinfo"><div class="vt">Harvard CS50 AI <span class="prio">#1</span></div><div class="vm">7 semanas gratis</div><div class="vd">Proyectos prácticos: búsqueda, clasificación, NLP.</div></div></div>
+              <div class="vitem"><div class="vthumb">B</div><div class="vinfo"><div class="vt">3Blue1Brown Transformers <span class="prio">#1</span></div><div class="vm">27 min</div><div class="vd">Entiendes atención y transformers SIN leer paper.</div></div></div>
+            </div>
+            <div class="stitle">Sem 5-6: LLMs + RAG</div>
+            <div class="dacard">
+              <div class="vitem"><div class="vthumb">L</div><div class="vinfo"><div class="vt">LangChain Tutorials <span class="prio">#2</span></div><div class="vm">15 lecciones</div><div class="vd">Ruta: fundamentos, chains, memoria, agentes, RAG.</div></div></div>
+              <div class="vitem"><div class="vthumb">R</div><div class="vinfo"><div class="vt">RAG Tutorial 2026 <span class="prio">#2</span></div><div class="vm">Escrito + código</div><div class="vd">LangChain + ChromaDB con PDF real.</div></div></div>
+              <div class="vitem"><div class="vthumb">I</div><div class="vinfo"><div class="vt">IBM Technology <span class="prio">#3</span></div><div class="vm">5-10 min</div><div class="vd">Conceptos IA claros: RAG, fine-tuning, agentes.</div></div></div>
+            </div>
+            <div class="stitle">Sem 7-8: Agentes + Proyecto</div>
+            <div class="dacard">
+              <div class="vitem"><div class="vthumb">T</div><div class="vinfo"><div class="vt">Tech With Tim <span class="prio">#2</span></div><div class="vm">Proyectos ML/IA</div><div class="vd">Chatbots, agentes, ML. Buenos para portfolio.</div></div></div>
+              <div class="vitem"><div class="vthumb">N</div><div class="vinfo"><div class="vt">Nicholas Renotte <span class="prio">#3</span></div><div class="vm">Proyectos visuales</div><div class="vd">Motivacional. Portfolios visuales.</div></div></div>
+              <div class="vitem"><div class="vthumb">K</div><div class="vinfo"><div class="vt">Krish Naik <span class="prio">#3</span></div><div class="vm">End-to-end ML</div><div class="vd">Flask, Docker, AWS. Enfocado a producción.</div></div></div>
+            </div>
+          </div>
+
+          <!-- ===== DA: RECURSOS ===== -->
+          <div class="da-content" id="da-recursos">
+            <div class="dacard">
+              <h3>■ Stack Tecnológico</h3>
+              <h4>Instalación (Día 0)</h4>
+              <ul><li>Python 3.12 · VS Code · Git · Docker · Postman</li></ul>
+              <h4>Librerías</h4>
+              <ul><li><b>Nivel 1:</b> pandas, openpyxl, requests</li><li><b>Nivel 2:</b> scikit-learn, joblib, flask, matplotlib</li><li><b>Nivel 3:</b> langchain, chromadb, openai, sentence-transformers</li><li><b>Nivel 4:</b> pypdf, streamlit, python-dotenv, fastapi</li></ul>
+            </div>
+            <div class="dacard">
+              <h3>■ Cursos Harvard Gratis</h3>
+              <ul><li><b>CS50P:</b> Python · cs50.harvard.edu/python</li><li><b>CS50x:</b> Intro a CS · cs50.harvard.edu/x</li><li><b>CS50 AI:</b> IA con Python · cs50.harvard.edu/ai</li></ul>
+            </div>
+            <div class="dacard">
+              <h3>■ Proyectos del Portfolio</h3>
+              <ul><li><b>P1</b> (Sem 1-2): AutoMail — leer Excel + enviar correos</li><li><b>P2</b> (Sem 3-4): EduPredict — API Flask predice reprobación</li><li><b>P3</b> (Sem 5-6): FaqBot — chatbot con memoria + embeddings</li><li><b>P4</b> (Sem 7-8): EduAssist — 3 agentes RAG+Predict+Admin</li></ul>
+            </div>
+          </div>
+
+          <!-- ===== DA: PROMPTS ===== -->
+          <div class="da-content" id="da-prompts">
+            <div class="dacard">
+              <h3>⚡ Diccionario del Vibecoder</h3>
+              <p>10 prompts universales. Copia y pega.</p>
+            </div>
+            <div class="dacard"><h3>1. Generar código base</h3><div class="prompt-box">"Eres senior en [Python]. Genera un script que [descripción]. Incluye: logging, try/except, type hints, comentarios. Que sea ejecutable."</div></div>
+            <div class="dacard"><h3>2. Depurar error</h3><div class="prompt-box">"Código: [pegarlo]. Error: [pegarlo]. Dame 3 causas probables, cómo verificarlas, código corregido."</div></div>
+            <div class="dacard"><h3>3. Explicar código</h3><div class="prompt-box">"Explica este código como si tuviera 15 años. Qué hace cada bloque, por qué es necesario, qué pasa si lo quito."</div></div>
+            <div class="dacard"><h3>4. Refactorizar</h3><div class="prompt-box">"Refactoriza: más legible, modular, funciones, type hints, PEP8. No cambies funcionalidad."</div></div>
+            <div class="dacard"><h3>5. Añadir feature</h3><div class="prompt-box">"A este código quiero añadir [feature]. Solo muéstrame qué líneas añadir, dónde, qué imports."</div></div>
+            <div class="dacard"><h3>6. Mejorar prompts</h3><div class="prompt-box">"Mejora este prompt: [mi prompt]. Hazlo más específico con restricciones y formato de salida."</div></div>
+            <div class="dacard"><h3>7. Escribir tests</h3><div class="prompt-box">"Tests con pytest para este código: caso normal, borde, error. Usa assert y parametrize."</div></div>
+            <div class="dacard"><h3>8-10. Comparar · Convertir · Seguridad</h3><div class="prompt-box">"Compara [lib A] vs [lib B] para [tarea]" · "Convierte de [lib A] a [lib B]" · "Revisa vulnerabilidades en este código"</div></div>
+          </div>
+
+          <!-- ===== DA: PLAN B ===== -->
+          <div class="da-content" id="da-planb">
+            <div class="dacard">
+              <h3>▲ Plan de Contingencia</h3>
+              <p>3 atajos para cuando te estanques.</p>
+            </div>
+            <div class="dacard">
+              <h3>⚡ Atajo 1: ML sin teoría</h3>
+              <ul><li>Solo memoriza: <code>import → split → fit → predict → score</code></li><li>Random Forest funciona sin tuning.</li><li>¿Accuracy baja? → más datos, no cambiar modelo.</li></ul>
+            </div>
+            <div class="dacard">
+              <h3>⚡ Atajo 2: Error → IA</h3>
+              <ul><li>Copia el error a ChatGPT: "Explica como si tuviera 12 años"</li><li>VS Code: selecciona error → Ctrl+I → "Fix this"</li><li><b>Regla:</b> máx 30 min por error. Pídele a la IA.</li></ul>
+            </div>
+            <div class="dacard">
+              <h3>⚡ Atajo 3: LangChain manual</h3>
+              <ul><li>RAG con Python puro: <code>openai.Embedding.create()</code> + numpy para coseno</li><li>Fórmula: <code>sim = np.dot(e1,e2)/(np.linalg.norm(e1)*np.linalg.norm(e2))</code></li></ul>
+            </div>
+            <div class="dacard">
+              <h3>📉 Plan B por atraso</h3>
+              <ul><li><b>Sem 1-2 atrasada?</b> Salta API, ve directo a ML</li><li><b>Sem 5-6 atrasada?</b> Salta ChromaDB, usa FAISS</li><li><b>Nunca</b> saltes el proyecto final. Hazlo aunque sea solo RAG.</li></ul>
+            </div>
+            <div class="dacard">
+              <h3>🔄 Depuración en 15 min</h3>
+              <ul><li><b>0-5 min:</b> Lees el error, buscas typo</li><li><b>5-10 min:</b> IA: "Dime 3 causas"</li><li><b>10-15 min:</b> "Reescribe más simple"</li><li><b>>15 min:</b> Borra, prompt diferente</li></ul>
+            </div>
+          </div>
+
+        </div><!-- /da-container -->
+
+        <!-- BOOT LINE -->
+        <div class="boot-line">System 1.1 · <span>Fansia OS</span> · © 1984-2026</div>
+
+      </div><!-- /scrollable-content -->
+    </div><!-- /window-body -->
+  </div><!-- /window -->
+
+  <!-- TRASH -->
+  <div class="desktop-bottom">
+    <div class="trash-icon" onclick="trashClick()">🗑</div>
+    <div class="trash-label">Trash</div>
+  </div>
+
+<script>
+const WEEK_DATA = [
+  { t: "Semana 0 — Preparación", b: "<h4>Objetivo</h4><p>Entorno listo. Sin escribir código.</p><h4>Instalar</h4><ul><li>Python 3.12</li><li>VS Code + extensiones</li><li>Git + GitHub Desktop</li><li>Docker Desktop</li><li>Postman</li></ul><h4>Cuentas</h4><ul><li>GitHub · ChatGPT · OpenAI API ($5 crédito)</li></ul>" },
+  { t: "Semana 1 — Python + Automatización", b: "<h4>Objetivo</h4><p>Escribir scripts que lean archivos y envíen correos.</p><h4>Temas</h4><ul><li>Python: variables, listas, dicts, loops, funciones</li><li>openpyxl + smtplib</li><li>Git básico</li></ul><h4>Proyecto: MailMasivoExcel</h4><p>Lee Excel con [Nombre, Email, Nota] y envía correo personalizado.</p>" },
+  { t: "Semana 2 — Pandas + APIs", b: "<h4>Objetivo</h4><p>Consumir APIs y generar reportes Excel.</p><h4>Temas</h4><ul><li>Pandas: read_csv, groupby, to_excel</li><li>Requests + API REST</li><li>CSV, JSON, Excel</li></ul><h4>Proyecto: ReporteadorAutomático</h4><p>API clima → Pandas → Excel con promedio/máx/mín.</p>" },
+  { t: "Semana 3 — Embeddings (corazón IA)", b: "<h4>Objetivo</h4><p>Vectores, similaridad semántica, buscador manual.</p><h4>Temas</h4><ul><li>Embeddings: texto → vectores</li><li>Similaridad del coseno</li><li>Sentence-Transformers + numpy</li></ul><h4>Proyecto: FAQ Semántico</h4><p>Chatbot terminal que busca FAQ por similaridad. Sin LangChain.</p>" },
+  { t: "Semana 4 — ML + Random Forest", b: "<h4>Objetivo</h4><p>Entrenar modelo predictivo y desplegar API.</p><h4>Temas</h4><ul><li>Scikit-learn: split → fit → predict → score</li><li>Random Forest</li><li>Flask + joblib</li></ul><h4>Proyecto: EduPredict API</h4><p>API Flask que predice reprobación. Dockerizada.</p>" },
+  { t: "Semana 5 — LLMs + Prompt Engineering", b: "<h4>Objetivo</h4><p>Chatbots con memoria y tools usando APIs LLM.</p><h4>Temas</h4><ul><li>OpenAI API: ChatCompletion, system prompt, temperatura</li><li>LangChain básico</li><li>Memoria + Tool calling</li></ul><h4>Proyecto: ChatbotAtenciónCliente</h4><p>Chatbot con memoria + tools (clima, calculadora).</p>" },
+  { t: "Semana 6 — RAG + Chatbots", b: "<h4>Objetivo</h4><p>Agente que lea PDFs y responda con RAG.</p><h4>Temas</h4><ul><li>PyPDFLoader + TextSplitter</li><li>ChromaDB + embeddings</li><li>RetrievalQA chain</li></ul><h4>Proyecto: RAG-ManualEscolar</h4><p>PDF escolar → responde preguntas con RAG + memoria.</p>" },
+  { t: "Semana 7 — Agentes + Multi-agente", b: "<h4>Objetivo</h4><p>Sistema multi-agente con router de intenciones.</p><h4>Temas</h4><ul><li>Agentes con loop de razonamiento</li><li>Router de intenciones (embeddings)</li><li>Memoria persistente (SQLite)</li></ul><h4>Proyecto: Sistema Multi-agente</h4><p>Router + RAG + Predict + Admin. Evaluación automática.</p>" },
+  { t: "Semana 8 — PROYECTO FINAL: EduAssist", b: "<h4>Objetivo</h4><p>Asistente Educativo completo, dockerizado, con UI y portfolio.</p><h4>Temas</h4><ul><li>Streamlit UI</li><li>Integración multi-agente</li><li>Docker + docker-compose</li><li>README profesional</li></ul><h4>EduAssist</h4><p>3 agentes: RAG + Predictivo + Admin. Streamlit. Docker. GitHub.</p>" }
+];
+
+function init() {
+  const n = localStorage.getItem('fansia_name');
+  if (n) { document.getElementById('pname').value = n; updateGreeting(); }
+  document.getElementById('pname').addEventListener('input', function() {
+    localStorage.setItem('fansia_name', this.value);
+    updateGreeting(); updateAll();
+  });
+
+  const ic = localStorage.getItem('fansia_icon');
+  if (ic) { document.getElementById('picon').innerHTML = ic;
+    document.querySelectorAll('.iopt').forEach(el => el.classList.toggle('sel', el.dataset.i === ic)); }
+
+  const d = localStorage.getItem('fansia_diary');
+  if (d) document.getElementById('diary').value = d;
+
+  const cs = localStorage.getItem('fansia_checks');
+  if (cs) { JSON.parse(cs).forEach(id => { const el = document.querySelector(`[data-c="${id}"]`); if (el) el.classList.add('done'); }); }
+
+  const ws = localStorage.getItem('fansia_weeks');
+  if (ws) { JSON.parse(ws).forEach(w => { const el = document.querySelector(`[data-w="${w}"]`); if (el) { el.querySelector('.wdot').classList.add('chk'); el.classList.add('done'); } }); }
+
+  document.querySelectorAll('.chk').forEach(el => { el.addEventListener('click', function() { this.classList.toggle('done'); saveChecks(); updateAll(); }); });
+  document.querySelectorAll('.wcell').forEach(el => { el.addEventListener('click', function() { const w = parseInt(this.dataset.w); renderWeek(w); this.querySelector('.wdot').classList.toggle('chk'); this.classList.toggle('done'); saveWeeks(); updateAll(); }); });
+
+  document.querySelectorAll('.da-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.da-btn').forEach(b => b.classList.remove('act'));
+      document.querySelectorAll('.da-content').forEach(c => c.classList.remove('act'));
+      this.classList.add('act');
+      document.getElementById('da-' + this.dataset.da).classList.add('act');
+      document.getElementById('windowTitle').textContent = this.textContent.trim() || 'Fansia OS';
+      if (this.dataset.da === 'cal') buildCalendar();
+    });
+  });
+
+  updateClock(); setInterval(updateClock, 60000);
+  renderWeek(0); buildCalendar(); updateAll();
+}
+
+function updateGreeting() {
+  const name = document.getElementById('pname').value.trim();
+  document.getElementById('greeting').textContent = name ? 'Bienvenido, ' + name : 'Bienvenido, viajer@';
+}
+
+function toggleIcons() { document.getElementById('iconStrip').classList.toggle('open'); }
+document.querySelectorAll('.iopt').forEach(el => { el.addEventListener('click', function() {
+  document.querySelectorAll('.iopt').forEach(e => e.classList.remove('sel'));
+  this.classList.add('sel');
+  document.getElementById('picon').innerHTML = this.dataset.i;
+  localStorage.setItem('fansia_icon', this.dataset.i);
+  setTimeout(() => document.getElementById('iconStrip').classList.remove('open'), 200);
+}); });
+
+function updateClock() { const d = new Date(); document.getElementById('clock').textContent = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0'); }
+function renderWeek(idx) { const w = WEEK_DATA[idx] || WEEK_DATA[0]; document.getElementById('dtitle').textContent = w.t; document.getElementById('dbody').innerHTML = w.b; }
+function saveWeeks() { const d = []; document.querySelectorAll('.wcell.done').forEach(el => d.push(el.dataset.w)); localStorage.setItem('fansia_weeks', JSON.stringify(d)); }
+function saveChecks() { const d = []; document.querySelectorAll('.chk.done').forEach(el => d.push(el.dataset.c)); localStorage.setItem('fansia_checks', JSON.stringify(d)); }
+function resetChecks() { if (!confirm('Reiniciar todo el checklist?')) return; document.querySelectorAll('.chk').forEach(el => el.classList.remove('done')); localStorage.removeItem('fansia_checks'); updateAll(); }
+
+function saveDiary() {
+  const t = document.getElementById('diary').value;
+  localStorage.setItem('fansia_diary', t);
+  const s = document.getElementById('diaryStatus');
+  s.textContent = '✓ ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  setTimeout(() => { s.textContent = 'Guardado'; }, 3000);
+}
+function clearDiary() { if (!confirm('Borrar entrada?')) return; document.getElementById('diary').value = ''; localStorage.removeItem('fansia_diary'); document.getElementById('diaryStatus').textContent = 'Borrado'; }
+
+function buildCalendar() {
+  const grid = document.getElementById('calgrid');
+  let start = localStorage.getItem('fansia_start');
+  if (!start) { start = Date.now(); localStorage.setItem('fansia_start', start); }
+  const sd = new Date(parseInt(start)); const td = new Date();
+  const el = Math.max(0, Math.floor((td - sd) / 86400000));
+  const left = Math.max(0, 60 - el);
+  grid.innerHTML = '';
+  ['D','L','M','M','J','V','S'].forEach(h => { const d = document.createElement('div'); d.className = 'calh'; d.textContent = h; grid.appendChild(d); });
+  for (let i = 0; i < sd.getDay(); i++) { const e = document.createElement('div'); e.className = 'cald emp'; grid.appendChild(e); }
+  for (let d = 0; d < 60; d++) {
+    const cd = new Date(sd); cd.setDate(sd.getDate() + d);
+    const div = document.createElement('div'); div.className = 'cald'; div.textContent = d + 1;
+    const diff = Math.floor((cd - td) / 86400000);
+    if (diff < 0) div.classList.add('pst'); else if (diff === 0) div.classList.add('tdy'); else div.classList.add('rem');
+    grid.appendChild(div);
+  }
+  document.getElementById('calStatus').textContent = left + ' días restantes';
+  document.getElementById('calCount').textContent = el + ' / 60';
+}
+
+function updateAll() {
+  const tChk = document.querySelectorAll('.chk').length, dChk = document.querySelectorAll('.chk.done').length;
+  const tW = document.querySelectorAll('.wcell').length, dW = document.querySelectorAll('.wcell.done').length;
+  const pct = Math.round((dChk / tChk) * 50 + (dW / tW) * 50);
+  document.getElementById('pfill').style.width = pct + '%';
+  document.getElementById('pctText').textContent = pct + '%';
+  const start = localStorage.getItem('fansia_start');
+  const days = start ? Math.min(Math.floor((Date.now() - parseInt(start)) / 86400000), 60) : 0;
+  document.getElementById('pov').textContent = 'Día ' + days + ' de 60';
+  const wk = Math.min(Math.floor(days / 7) + 1, 9);
+  const wt = ['Preparación','Python+Auto','Pandas+APIs','Embeddings','ML+RF','LLMs+Prompt','RAG','Agentes','Proyecto Final'];
+  document.getElementById('weekLabel').textContent = 'Semana ' + Math.min(wk,8) + ' · ' + wt[Math.min(wk,8)];
+  document.getElementById('dayLabel').textContent = '◆ ' + days + ' días';
+  document.getElementById('chkCount').textContent = '(' + dChk + '/' + tChk + ')';
+  let proj = 0; [2,4,6,8].forEach(w => { const el = document.querySelector(`[data-w="${w}"]`); if (el && el.classList.contains('done')) proj++; });
+  localStorage.setItem('fansia_proj', proj.toString());
+  document.getElementById('statDays').textContent = days;
+  document.getElementById('statLeft').textContent = Math.max(0,60-days);
+  document.getElementById('statWeek').textContent = Math.min(wk,8);
+  document.getElementById('statCheck').textContent = dChk + '/' + tChk;
+  document.getElementById('statProj').textContent = proj + '/4';
+}
+
+function closeWarning() { alert('System error: Cannot close. Learning in progress.'); }
+function zoomWarning() { alert('Zoom not available. Your progress is already maximized.'); }
+function trashClick() { alert('Empty Trash? Your completed tasks are already gone. Keep going!'); }
+
+document.addEventListener('DOMContentLoaded', init);
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); }); }
+</script>
+</body>
+</html>

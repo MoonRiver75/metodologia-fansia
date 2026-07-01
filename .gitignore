@@ -1,0 +1,7 @@
+# OS files
+Thumbs.db
+.DS_Store
+*.log
+# Backup copies
+*.bak
+* - Copy.*
