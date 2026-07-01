@@ -868,32 +868,51 @@
             <div class="dacard"><h3>8-10. Comparar - Convertir - Seguridad</h3><div class="prompt-box">"Compara [lib A] vs [lib B] para [tarea]" - "Convierte de [lib A] a [lib B]" - "Revisa vulnerabilidades en este codigo"</div></div>
           </div>
 
-          <!-- DA: PLAN B -->
+          <!-- DA: PLAN B (Burnout Guide) -->
           <div class="da-content" id="da-planb">
             <div class="dacard">
-              <h3>Plan de Contingencia</h3>
-              <p>3 atajos para cuando te estanques.</p>
+              <h3>Guia Anti-Burnout Tecnico</h3>
+              <p>Cuando tu cerebro dice "no mas", usa esto.</p>
             </div>
             <div class="dacard">
-              <h3>Atajo 1: ML sin teoria</h3>
-              <ul><li>Solo memoriza: <code>import - split - fit - predict - score</code></li><li>Random Forest funciona sin tuning.</li><li>Accuracy baja? - mas datos, no cambiar modelo.</li></ul>
+              <h3>Estrategias Base</h3>
+              <div class="chk" data-c="b1"><div class="box"></div><div class="txt"><b>Logica Sustractiva:</b> No anadas complejidad. Empieza desde un estado ideal y resta hasta aislar el nucleo del problema.</div></div>
+              <div class="chk" data-c="b2"><div class="box"></div><div class="txt"><b>Desconexion Tactica:</b> Alejate de la pantalla 15-20 min. Camina, haz ejercicio. El "modo difuso" del cerebro conecta ideas.</div></div>
+              <div class="chk" data-c="b3"><div class="box"></div><div class="txt"><b>Pato de Goma Inverso:</b> Que la IA te explique <i>tu propio codigo</i> de vuelta. Oiras el error al instante.</div></div>
             </div>
             <div class="dacard">
-              <h3>Atajo 2: Error - IA</h3>
-              <ul><li>Copia el error a ChatGPT: "Explica como si tuviera 12 anos"</li><li>VS Code: selecciona error - Ctrl+I - "Fix this"</li><li><b>Regla:</b> max 30 min por error. Pidele a la IA.</li></ul>
+              <h3>Checklist Tactico de Accion</h3>
+              <p style="margin-bottom:4px"><b>Fase 1 - Detencion Inmediata</b></p>
+              <div class="chk" data-c="bp1a"><div class="box"></div><div class="txt">Cerrar pestañas de IDE, docs y herramientas de diagramacion</div></div>
+              <div class="chk" data-c="bp1b"><div class="box"></div><div class="txt">Alejarse de la pantalla 15-20 min</div></div>
+              <div class="chk" data-c="bp1c"><div class="box"></div><div class="txt">Salir al aire libre o hacer actividad fisica</div></div>
+              <p style="margin:6px 0 4px"><b>Fase 2 - Descarga Cognitiva</b></p>
+              <div class="chk" data-c="bp2a"><div class="box"></div><div class="txt">Brain dump: escribe todo lo que te abruma sin orden</div></div>
+              <div class="chk" data-c="bp2b"><div class="box"></div><div class="txt">Identificar el punto exacto de friccion (bug? falta claridad? fatiga?)</div></div>
+              <div class="chk" data-c="bp2c"><div class="box"></div><div class="txt">Delegar primera capa a IA con rol de Arquitecto Senior</div></div>
+              <p style="margin:6px 0 4px"><b>Fase 3 - Reestructuracion</b></p>
+              <div class="chk" data-c="bp3a"><div class="box"></div><div class="txt">Metodo deductivo: asumir flujo ideal y restar hasta tarea atomica</div></div>
+              <div class="chk" data-c="bp3b"><div class="box"></div><div class="txt">Dividir problema en sub-tareas de &lt;10 min cada una</div></div>
+              <div class="chk" data-c="bp3c"><div class="box"></div><div class="txt">Eliminar metricas secundarias, enfocar solo en nucleo logico</div></div>
+              <p style="margin:6px 0 4px"><b>Fase 4 - Retorno Protegido</b></p>
+              <div class="chk" data-c="bp4a"><div class="box"></div><div class="txt">Modo "No molestar" en Teams/Slack</div></div>
+              <div class="chk" data-c="bp4b"><div class="box"></div><div class="txt">Pomodoro: bloques de enfoque alternados con descansos sin pantalla</div></div>
+              <div class="chk" data-c="bp4c"><div class="box"></div><div class="txt">Aceptar avance parcial como exito. Descansar es parte del rendimiento</div></div>
             </div>
             <div class="dacard">
-              <h3>Atajo 3: LangChain manual</h3>
-              <ul><li>RAG con Python puro: <code>openai.Embedding.create()</code> + numpy para coseno</li><li>Formula: <code>sim = np.dot(e1,e2)/(np.linalg.norm(e1)*np.linalg.norm(e2))</code></li></ul>
+              <h3>Herramientas IA por Perfil</h3>
+              <div class="chk" data-c="bCHAT"><div class="box"></div><div class="txt"><b>ChatGPT</b> — Arquitecto de Brainstorming: <span style="color:var(--text-dim)">"Actua como Arquitecto Senior. No codigo. Hazme 3 preguntas clave."</span></div></div>
+              <div class="chk" data-c="bCLAUDE"><div class="box"></div><div class="txt"><b>Claude</b> — Analista de Contexto: <span style="color:var(--text-dim)">"Aqui esta mi script fallando. Explicame como revision de codigo en pareja."</span></div></div>
+              <div class="chk" data-c="bGEMINI"><div class="box"></div><div class="txt"><b>Gemini</b> — Investigador Multimodal: <span style="color:var(--text-dim)">"Compara mi diagrama con requisitos. Hay cuellos de botella?"</span></div></div>
+              <div class="chk" data-c="bOPENCODE"><div class="box"></div><div class="txt"><b>OpenCode / Local</b> — Sandbox: <span style="color:var(--text-dim)">"Genera 3 scripts alternativos. Voy a iterar localmente."</span></div></div>
             </div>
             <div class="dacard">
-              <h3>Plan B por atraso</h3>
-              <ul><li><b>Sem 1-2 atrasada?</b> Salta API, ve directo a ML</li><li><b>Sem 5-6 atrasada?</b> Salta ChromaDB, usa FAISS</li><li><b>Nunca</b> saltes el proyecto final. Hazlo aunque sea solo RAG.</li></ul>
+              <h3>Tecnicas de Prompting Anti-Burnout</h3>
+              <div class="chk" data-c="bt1"><div class="box"></div><div class="txt"><b>Metodo Socratico:</b> "No me des la solucion. Hazme preguntas de opcion multiple para deducirla yo."</div></div>
+              <div class="chk" data-c="bt2"><div class="box"></div><div class="txt"><b>Cambio de Paradigma:</b> "Explica esto con una analogia de cocina o cafeteria."</div></div>
+              <div class="chk" data-c="bt3"><div class="box"></div><div class="txt"><b>Triangulacion Critica:</b> Genera solucion con Claude, pega en ChatGPT: "Critica esto en produccion."</div></div>
             </div>
-            <div class="dacard">
-              <h3>Depuracion en 15 min</h3>
-              <ul><li><b>0-5 min:</b> Lees el error, buscas typo</li><li><b>5-10 min:</b> IA: "Dime 3 causas"</li><li><b>10-15 min:</b> "Reescribe mas simple"</li><li><b>>15 min:</b> Borra, prompt diferente</li></ul>
-            </div>
+            <div class="reset-area"><button class="btn" onclick="resetBurnoutChecks()">REINICIAR CHECKLIST</button></div>
           </div>
 
         </div><!-- /da-container -->
@@ -960,11 +979,19 @@ function init() {
 
   const cs = localStorage.getItem('fansia_checks');
   if (cs) { JSON.parse(cs).forEach(id => { const el = document.querySelector(`[data-c="${id}"]`); if (el) el.classList.add('done'); }); }
+  const bc = localStorage.getItem('fansia_burnout_checks');
+  if (bc) { JSON.parse(bc).forEach(id => { const el = document.querySelector(`#da-planb [data-c="${id}"]`); if (el) el.classList.add('done'); }); }
 
   const ws = localStorage.getItem('fansia_weeks');
   if (ws) { JSON.parse(ws).forEach(w => { const el = document.querySelector(`[data-w="${w}"]`); if (el) { el.querySelector('.wdot').classList.add('chk'); el.classList.add('done'); } }); }
 
-  document.querySelectorAll('.chk').forEach(el => { el.addEventListener('click', function() { this.classList.toggle('done'); saveChecks(); updateAll(); }); });
+  document.querySelectorAll('.chk').forEach(el => {
+    if (el.closest('#da-planb')) {
+      el.addEventListener('click', function() { this.classList.toggle('done'); saveBurnoutChecks(); });
+    } else {
+      el.addEventListener('click', function() { this.classList.toggle('done'); saveChecks(); updateAll(); });
+    }
+  });
   document.querySelectorAll('.wcell').forEach(el => { el.addEventListener('click', function() { const w = parseInt(this.dataset.w); renderWeek(w); this.querySelector('.wdot').classList.toggle('chk'); this.classList.toggle('done'); saveWeeks(); updateAll(); }); });
 
   document.querySelectorAll('.da-btn').forEach(btn => {
@@ -1002,8 +1029,10 @@ document.querySelectorAll('.iopt').forEach(el => { el.addEventListener('click', 
 function updateClock() { const d = new Date(); document.getElementById('clock').textContent = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0'); }
 function renderWeek(idx) { const w = WEEK_DATA[idx] || WEEK_DATA[0]; document.getElementById('dtitle').textContent = w.t; document.getElementById('dbody').innerHTML = w.b; }
 function saveWeeks() { const d = []; document.querySelectorAll('.wcell.done').forEach(el => d.push(el.dataset.w)); localStorage.setItem('fansia_weeks', JSON.stringify(d)); }
-function saveChecks() { const d = []; document.querySelectorAll('.chk.done').forEach(el => d.push(el.dataset.c)); localStorage.setItem('fansia_checks', JSON.stringify(d)); }
-function resetChecks() { if (!confirm('Reiniciar todo el checklist?')) return; document.querySelectorAll('.chk').forEach(el => el.classList.remove('done')); localStorage.removeItem('fansia_checks'); updateAll(); }
+function saveChecks() { const d = []; document.querySelectorAll('.chk.done').forEach(el => { if (!el.closest('#da-planb')) d.push(el.dataset.c); }); localStorage.setItem('fansia_checks', JSON.stringify(d)); }
+function saveBurnoutChecks() { const d = []; document.querySelectorAll('#da-planb .chk.done').forEach(el => d.push(el.dataset.c)); localStorage.setItem('fansia_burnout_checks', JSON.stringify(d)); }
+function resetChecks() { if (!confirm('Reiniciar todo el checklist?')) return; document.querySelectorAll('.chk:not(#da-planb .chk)').forEach(el => el.classList.remove('done')); localStorage.removeItem('fansia_checks'); updateAll(); }
+function resetBurnoutChecks() { if (!confirm('Reiniciar checklist anti-burnout?')) return; document.querySelectorAll('#da-planb .chk').forEach(el => el.classList.remove('done')); localStorage.setItem('fansia_burnout_checks', JSON.stringify([])); }
 
 function saveDiary() {
   const t = document.getElementById('diary').value;
